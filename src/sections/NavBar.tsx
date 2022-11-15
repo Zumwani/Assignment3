@@ -2,9 +2,9 @@ import React from 'react'
 import { NavLink } from 'react-router-dom';
 // import { useShoppingCart } from '../Utility/ShoppingCartUtility';
 // import { useWishlist } from '../Utility/WishlistUtility';
-import IconButton from './IconButton';
+import IconButton from '../components/IconButton';
 
-const NavBar = () => {
+const NavBar: React.FC = () => {
 
   //Set color to transparent when scrollbar is at top
   const setTransparentWhenScrollbarIsAtTop = () => {
