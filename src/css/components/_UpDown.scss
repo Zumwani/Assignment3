@@ -1,0 +1,48 @@
+.up-down {
+
+    width: fit-content;        
+    user-select: none;
+    margin-bottom: 6px;
+    padding-left: 0;
+    padding-right: 0;
+
+    span {
+        padding-left: 6px;
+        padding-right: 6px;
+        min-height: 100px;
+        border: 1px solid #20202020;
+        border-left: 0;
+        border-right: 0;
+    }
+    
+    button {
+
+        border-radius: 5px;
+        background-color: #00000010;
+        height: 25px;
+        width: 25px;
+        padding: 0px;
+
+        transition: all 0.1s ease;
+
+        &:hover {
+            background-color: #aaaaaa !important;
+        }
+
+        &:active {
+            background-color: gray !important;
+        }
+
+    }
+
+    button:nth-of-type(1) {
+        border-radius: 5px 0 0 5px;
+        border: 1px solid #20202020;
+    }
+
+    button:nth-of-type(2) {
+        border-radius: 0 5px 5px 0;
+        border: 1px solid #20202020;
+    }
+
+}

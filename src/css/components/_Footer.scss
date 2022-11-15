@@ -1,0 +1,41 @@
+footer {
+
+    position: relative;
+    background-color: var(--color-light-gray);
+    height: var(--footer-height);
+    margin-top: 110px;
+    text-align: center;
+
+    div {
+        position: absolute;
+        margin: auto;
+        margin-top: 24px;
+        gap: 10px;
+        width: 100%;
+    }
+
+    p {
+        margin-bottom: 0;
+    }
+
+    a {
+        height: 22px;
+        margin: 9px;
+
+        &:hover {
+            scale: 110%;
+        }
+
+        &:active {
+            scale: 150%;
+        }
+
+    }
+
+    .fa-facebook:hover { color: blue; }
+    .fa-instagram:hover { color: purple; }
+    .fa-twitter:hover { color: deepskyblue; }
+    .fa-google:hover { color: red; }
+    .fa-linkedin:hover { color: blue; }
+
+}

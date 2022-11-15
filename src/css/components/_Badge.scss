@@ -1,0 +1,22 @@
+[badge] {
+    
+    position: relative;
+    
+    &::after {
+        content: attr(badge);
+        position: absolute;
+        top: -26px;
+        right: -4px;
+        width: 16px;
+        height: 16px;
+        padding-left: 0.5px;
+        background-color: var(--color-red);
+        border-radius: 100%;
+        color: white;
+        z-index: 1;
+        font-size: 11px;
+        font-family: poppins;
+        text-align: center;
+    }
+
+}

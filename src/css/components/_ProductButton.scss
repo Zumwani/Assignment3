@@ -1,0 +1,105 @@
+.button-product {
+
+    width: 255px;
+    height: 320px;
+    text-align: start;
+    position: relative;
+    padding: 0;
+    transition: all 0.1s ease;
+
+    img {
+        width: 100%;
+        margin: 0;
+        height: 210px;
+        background-color: var(--color-light-gray);
+        border: none;
+        outline: none;
+        object-position: center;
+        object-fit: cover;
+        user-select: none;
+    }
+    
+    >p>:first-of-type {
+        margin-top: 8px;
+        font-size: 13px;
+        font-weight: normal;
+        color: #616365;
+    }
+
+    .hover-box {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 210px;
+        background-color: #707070AA;
+        opacity: 0;
+        transition: all 0.25s ease;
+        user-select: none;
+    }
+
+    &:hover {
+        .hover-box {
+            opacity: 1;
+        }
+    }
+
+    > div > a > button {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 50px;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .icon-buttons {
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+
+    .button-icon {
+        margin-top: 10px;
+        margin-right: 10px;
+        font-weight: normal;
+    }
+
+    .fa-heart.active {
+        color: var(--color-red);
+    }
+
+    &.small {
+        width: 351px;
+        height: auto;
+        text-align: left;
+        display: flex;
+        flex-direction: row;
+
+        .info {
+            position: relative;
+            top: -16px;
+        }
+
+        img {
+            width: 160px;
+            height: 132px;
+            margin-right: 12px;
+            padding: 0;
+        }
+    
+        .hover-box {
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 160px;
+            height: 100%;
+            background-color: #707070AA;
+            transition: all 0.1s ease;
+        }
+    
+    }
+
+}

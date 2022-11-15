@@ -1,0 +1,131 @@
+#shopping-cart, #wishlist {
+
+    width: 500px;
+
+    .btn-close {
+        position: absolute;
+        right: 22px;
+        top: 22px;
+        width: 22px;
+    }
+
+    .offcanvas-body {
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .offcanvas-header {
+        padding-bottom: 0;
+    }
+
+    .total-price {
+        position: relative;
+        margin-top: 6px;
+        height: 64px;
+
+        b {
+            position: absolute;
+            right: 22px;
+        }
+
+    }
+
+    .checkout {
+        position: absolute;
+        right: 22px;
+        top: 32px;
+        padding: 6px 12px;
+        width: fit-content;
+        height: fit-content;
+        background-color: #20202020;
+    }
+    
+    .remove-button {
+
+        padding: 0px;
+        height: 25px;
+        width: fit-content;
+        border-radius: 5px;
+        background-color: transparent;
+        padding: 6px;
+
+        transition: all 0.1s ease;
+
+        &:hover {
+            background-color: #aaaaaa !important;
+        }
+
+        &:active {
+            background-color: gray !important;
+        }
+
+    }
+
+    .shopping-cart-item {
+        
+        display: flex;
+        
+        &:hover {
+            background-color: #20202020;
+        }
+
+        a:hover {
+            background-color: transparent;
+        }
+
+        img {
+            width: 52px;
+            margin-right: 22px;
+            margin-left: 22px;
+            margin-top: 6px;
+            margin-bottom: 6px;
+        }
+
+        .item-info {
+            align-self: center;
+        }
+
+        .price {
+            text-align: right;
+            margin-right: 22px;
+            align-self: center;
+        }
+
+    }
+
+    .nav {
+
+        margin-top: 12px;
+
+        div {
+            width: 100%;
+            text-align: center;
+            display: flex;
+        }
+
+        a {
+
+            height: 28px;
+            text-align: center;
+
+            &:hover {
+                background-color: gray;
+            }
+
+        }
+
+        p {
+            width: fit-content;
+            margin: auto;
+
+            &:after {
+                top: 0;
+                right: -16px;
+            }
+
+        }
+
+    }
+
+}

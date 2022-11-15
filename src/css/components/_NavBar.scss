@@ -1,0 +1,112 @@
+nav {
+    
+    position: sticky;
+    top: 0;
+    user-select: none;
+    z-index: 1;
+    padding-left: 22px;
+    padding-right: 22px;
+    background-color: var(--color-white);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    z-index: 10;
+    transition: all 0.2s ease-out;
+
+    > div {
+        display: flex;
+        height: var(--nav-height);
+        columns: 3;
+        justify-content: space-between;
+        align-items: center;
+        text-align: center;
+        max-width: var(--max-content-width);
+        margin: auto;
+    }
+
+    :last-of-type(div) {
+        justify-content: right;
+    }
+
+    &.top {
+        background-color: transparent;
+        box-shadow: none;
+    }
+
+    .fa {
+        font-weight: normal;
+    }
+    
+    a:not(.logo), button {
+        margin-left: 20px;
+    }
+    
+    a {
+        font-weight: bold;
+    }
+
+    .button-icon {
+        position: relative;
+        top: -8px;
+
+        &::after {
+            top: -6px;
+            padding-top: 2px;
+        }
+
+    }
+
+    .container {
+        width: 100%;
+        
+        &:last-child { text-align: end; }
+
+    }
+    
+    @media only screen and (max-width: 991px)  {
+        margin-top: 0;
+        max-width: 100vw !important;
+        align-items: start;
+
+        .button-icon {
+            margin-right: 22px;
+        }
+
+        .sidebar {
+            top: 0;
+        }
+
+    }
+    
+}
+
+.mobile-menu {
+
+    position: absolute;
+    top: 64px;
+    right: 22px;
+    text-align: center;
+    font-weight: bolder;
+    background-color: var(--color-light-gray);
+    border-color: var(--color-dark);
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 4px;
+    padding: 12px;
+    width: 200px;
+    z-index: 1;
+
+    >div {
+        display: flex;
+        flex-direction: column;
+    }
+
+}
+
+.logo {
+    background-image: url("../img/logo.svg");
+    background-repeat: no-repeat;
+    background-position: left;
+    margin-top: -12px;
+    display: block;
+    height: 49px;
+    align-self: center;
+}
