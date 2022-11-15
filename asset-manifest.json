@@ -1,0 +1,29 @@
+{
+  "files": {
+    "main.css": "/Assignment3/static/css/main.c8a4a95e.css",
+    "main.js": "/Assignment3/static/js/main.32f5713d.js",
+    "static/media/8.png": "/Assignment3/static/media/8.0610d7edfd75effd1c53.png",
+    "static/media/1.png": "/Assignment3/static/media/1.c355a4c1e656c546ae66.png",
+    "static/media/7.png": "/Assignment3/static/media/7.b692286c538282645b38.png",
+    "static/media/9.png": "/Assignment3/static/media/9.d8f1a5551430c22d3a9a.png",
+    "static/media/2.png": "/Assignment3/static/media/2.b7fb45129be803fac43e.png",
+    "static/media/3.png": "/Assignment3/static/media/3.038224d66037a036b355.png",
+    "static/media/6.png": "/Assignment3/static/media/6.c1a3d049bf1ccfb57fbf.png",
+    "static/media/4.png": "/Assignment3/static/media/4.18dd14d3f541c141268a.png",
+    "static/media/5.png": "/Assignment3/static/media/5.d4b5ba6df3fffdb842e9.png",
+    "static/media/specialty1.png": "/Assignment3/static/media/specialty1.eb8efc2bd1a1fe37fe16.png",
+    "static/media/specialty2.png": "/Assignment3/static/media/specialty2.c90ce3b1fd2dcce4c500.png",
+    "static/media/specialty3.png": "/Assignment3/static/media/specialty3.3dafef7628151cb2e1ef.png",
+    "static/media/customer-support.svg": "/Assignment3/static/media/customer-support.a316581ac8d662a0dd98.svg",
+    "static/media/credit-card.svg": "/Assignment3/static/media/credit-card.c7ee6198d1509b10b6db.svg",
+    "index.html": "/Assignment3/index.html",
+    "static/media/delivery-truck.svg": "/Assignment3/static/media/delivery-truck.24aac4d81a0b1cca8c8f.svg",
+    "static/media/logo.svg": "/Assignment3/static/media/logo.b026fb85520d459bc268.svg",
+    "main.c8a4a95e.css.map": "/Assignment3/static/css/main.c8a4a95e.css.map",
+    "main.32f5713d.js.map": "/Assignment3/static/js/main.32f5713d.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c8a4a95e.css",
+    "static/js/main.32f5713d.js"
+  ]
+}
