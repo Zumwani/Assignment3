@@ -1,9 +1,19 @@
 import React, { createContext, ReactNode, useContext, useState } from "react";
 import { CartItem } from "../models/CartItem";
 import { Product } from "../models/Product";
-// import ShoppingCart from "../views/ShoppingCartView";
+import ShoppingCart from "../views/ShoppingCart";
 
-const ShoppingCartContext = createContext(null);
+interface ShoppingCartContext {
+    cartItems: CartItem[], 
+    cartQuantity: number, 
+    getItemQuantity: (product:Product) => number, 
+    incrementQuantity: (item: Product|CartItem) => void, 
+    decrementQuantity: (item: Product|CartItem) => void, 
+    removeItem: (item: Product|CartItem) => void, 
+    toCartItem: (product:Product) => CartItem
+}
+
+const ShoppingCartContext = createContext<ShoppingCartContext | null>(null);
 
 export const useShoppingCart = () =>
     useContext(ShoppingCartContext);
@@ -12,28 +22,28 @@ type Param = {
     children: ReactNode
 }
 
-export const ShoppingCartProvider: React.FC<Param> = ({ children }) => {
-
+export const ShoppingCartProvider: React.FC<Param> = ({children}) => {
+    
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
     const cartQuantity = cartItems?.reduce(
         (quantity, item) => item.quantity + quantity, 0
     );
 
-    const getItemQuantity = (articleNumber: string) =>
-        cartItems.find(item => item.articleNumber === articleNumber)?.quantity || 0;
+    const getItemQuantity = (product: Product) =>
+        cartItems.find(item => item.articleNumber === product.articleNumber)?.quantity || 0;
 
-    const decrementQuantity = (cartItem: Product|CartItem, by = 1) => incrementQuantity(cartItem, -by);
-    const incrementQuantity = (cartItem: Product|CartItem, by = 1) => {
+    const decrementQuantity = (item: CartItem|Product, by = 1) => incrementQuantity(item, -by);
+    const incrementQuantity = (item: CartItem|Product, by = 1) => {
         
-        if (cartItem == null || cartItem.articleNumber == null)
-            return;
-        
-        let { articleNumber } = cartItem;
-        let product = cartItem as Product ?? (cartItem as CartItem).product;
+        let product = item as Product ?? (item as CartItem)?.product ?? null;
+        if (product == null)
+            throw "Cannot increment since product is null";
 
-        if (getItemQuantity(product.articleNumber) + by < 1)
-            removeItem(product.articleNumber);
+        let { articleNumber } = product;
+
+        if (getItemQuantity(product) + by < 1)
+            removeItem(product);
         else
             setCartItems(items => {
                 
@@ -49,16 +59,16 @@ export const ShoppingCartProvider: React.FC<Param> = ({ children }) => {
 
     }
 
-    const removeItem = (articleNumber: string) =>
-        setCartItems(items => items.filter(item => item.articleNumber !== articleNumber));
+    const removeItem = (product: Product|CartItem) =>
+        setCartItems(items => items.filter(item => item.articleNumber !== product.articleNumber));
 
     const toCartItem = (product: Product) =>
         ({ articleNumber: product.articleNumber, product: product, quantity: 1 });
 
     return (
-        <ShoppingCartContext.Provider value={{ cartItems, cartQuantity, getItemQuantity, incrementQuantity, decrementQuantity, removeItem, toCartItem } as any}>
+        <ShoppingCartContext.Provider value={{ cartItems, cartQuantity, getItemQuantity, incrementQuantity, decrementQuantity, removeItem, toCartItem }}>
             {children}
-            {/* <ShoppingCart/> */}
+            <ShoppingCart/>
         </ShoppingCartContext.Provider>
     )
     

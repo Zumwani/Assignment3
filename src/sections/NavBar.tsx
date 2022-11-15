@@ -1,7 +1,7 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom';
-// import { useShoppingCart } from '../Utility/ShoppingCartUtility';
-// import { useWishlist } from '../Utility/WishlistUtility';
+import { useShoppingCart } from '../Utility/ShoppingCartUtility';
+import { useWishlist } from '../Utility/WishlistUtility';
 import IconButton from '../components/IconButton';
 
 const NavBar: React.FC = () => {
@@ -15,9 +15,14 @@ const NavBar: React.FC = () => {
   document.addEventListener('scroll', setTransparentWhenScrollbarIsAtTop);
   setTransparentWhenScrollbarIsAtTop();
 
-//   const { cartQuantity } = useShoppingCart();
-//   const { wishlistQuanitity } = useWishlist();
+  const shoppingCartContext = useShoppingCart();
+  const wishlistContext = useWishlist();
+  if (shoppingCartContext == null /* || wishlistContext == null */)
+    return <></>;
 
+  // const { cartQuantity } = shoppingCartContext;
+  // const { wishlistQuanitity } = wishlistContext;
+  
   return (
     <>
       <nav className="top">
@@ -54,5 +59,7 @@ const NavBar: React.FC = () => {
   </>
   )
 }
+
+
 
 export default NavBar

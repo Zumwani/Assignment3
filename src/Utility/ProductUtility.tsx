@@ -1,10 +1,15 @@
-import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import React, { createContext, ReactNode, useContext, useEffect, useReducer, useState } from "react";
 import { Product } from "../models/Product";
 import { ProductList } from "../models/ProductList";
 
 const url = "https://win22-webapi.azurewebsites.net/api/products/";
 
-export const ProductContext = createContext(null);
+interface ProductContext {
+  products: ProductList, 
+  getProduct: (articleNumber: string) => Product | null;
+}
+
+export const ProductContext = createContext<ProductContext | null>(null);
 
 export const useProducts = () => {
   return useContext(ProductContext);
@@ -32,8 +37,10 @@ export const ProductProvider: React.FC<Param> = ({ children }) => {
       topReacted: [] 
     });
   
-    const getProduct = (articleNumber: string) =>
-      products.all.find(p => p.articleNumber == articleNumber || p.name.replaceAll(" ", "-").toLowerCase() == articleNumber);
+    const getProduct = (articleNumber: string): Product | null =>
+      products.all.find(p => p.articleNumber == articleNumber || p.name.replaceAll(" ", "-").toLowerCase() == articleNumber) ?? null;
+    
+    const [, forceUpdate] = useReducer(x => x + 1, 0);
 
     useEffect(() => {
   
@@ -55,19 +62,21 @@ export const ProductProvider: React.FC<Param> = ({ children }) => {
       }
       
       fetchAllProducts();
+      console.log(products);
+      forceUpdate();
   
     }, [setProducts]);
 
   return (
-    <ProductContext.Provider value={{ products, getProduct } as any}>
+    <ProductContext.Provider value={{ products, getProduct }}>
         {children}
     </ProductContext.Provider>
   );
 
 }
 
-export const productURL = (product:Product) =>
+export const productURL = (product: Product) =>
   product == null ? null : "/product/" + product.name.replaceAll(" ", "-").toLowerCase();
 
-export const categoryURL = (product:Product) =>
+export const categoryURL = (product: Product) =>
   product == null ? null : "/products/" + product.category.replaceAll(" ", "-").toLowerCase();

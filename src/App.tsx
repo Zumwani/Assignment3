@@ -9,19 +9,19 @@ import NotFoundView from './views/NotFound';
 // import ProductsView from './views/ProductsView';
 // import CategoriesView from './views/CategoriesView';
 import { ProductProvider } from './Utility/ProductUtility';
-// import { ShoppingCartProvider } from './Utility/ShoppingCartUtility';
-// import { WishlistProvider } from './Utility/WishlistUtility';
-// import { NavigationManager } from './Utility/NavigationUtility';
+import { ShoppingCartProvider } from './Utility/ShoppingCartUtility';
+import { WishlistProvider } from './Utility/WishlistUtility';
+import { NavigationManager } from './Utility/NavigationUtility';
 import './App.css';
 
 const App: React.FC = () =>
 (
   <BrowserRouter>
     <ProductProvider>
-      {/* <ShoppingCartProvider> */}
-        {/* <WishlistProvider> */}
+      <ShoppingCartProvider>
+        <WishlistProvider>
             <NavBar/>
-            {/* <NavigationManager> */}
+            <NavigationManager>
             <Routes>
                 {/* <Route path="/" element={<MainView/>} title="sak"/> */}
                 {/* <Route path='/product/:name' element={<ProductView/>}/> */}
@@ -33,9 +33,9 @@ const App: React.FC = () =>
                 <Route path="*" element={<NotFoundView/>}/>
             </Routes>
             <Footer/>
-          {/* </NavigationManager> */}
-        {/* </WishlistProvider> */}
-      {/* </ShoppingCartProvider> */}
+          </NavigationManager>
+        </WishlistProvider>
+      </ShoppingCartProvider>
     </ProductProvider>
   </BrowserRouter>
 );
