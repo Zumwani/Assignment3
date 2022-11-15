@@ -1,7 +1,6 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom';
 import { CartItem } from '../../models/CartItem';
-import { ShoppingCart } from '../../models/ShoppingCart';
 import { formatCurrency } from '../../Utility/CurrencyUtility';
 import { productURL } from '../../Utility/ProductUtility';
 import { useShoppingCart } from '../../Utility/ShoppingCartUtility'
@@ -14,11 +13,9 @@ type Param = {
 
 const ShoppingCartItem: React.FC<Param> = ({ item }) => {
     
-    if (item == null) throw "item is null";
-    
     const shoppingCart = useShoppingCart();
-    if (shoppingCart == null) throw "shopping cart is not initialized";
-    //if (item == null) throw "item is null";
+    if (shoppingCart === null || item === null)
+        throw new Error("Shopping cart is not initialized or item is null.");
 
     const { incrementQuantity, decrementQuantity, removeItem } = shoppingCart;
     

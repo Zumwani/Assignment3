@@ -1,7 +1,5 @@
 .contact-form {
     margin-bottom: 60px;
-    // margin-left: 12px;
-    // margin-right: 12px;
     
     >.container {
         margin: auto;
@@ -23,11 +21,6 @@
         width: 100%;
         padding: 18px 20px;
         border: 1px solid var(--color-light-gray);
-
-        &:active, &:focus {
-            // border-color: var(--color-dark-gray);
-        }
-
     }
 
     textarea {
@@ -61,6 +54,7 @@
 
     .error {
         border: 1px solid red;
+        color: black;
     }
     
 }

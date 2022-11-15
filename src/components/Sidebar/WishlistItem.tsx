@@ -11,12 +11,9 @@ type Params = {
 
 const WishlistItem: React.FC<Params> = ({ product }) => {
     
-    if (product == null)
-        throw "product is null.";
-
     const wishlistContext = useWishlist();
-    if (wishlistContext == null)
-        throw "Wishlist is not initialized.";
+    if (wishlistContext === null || product === null)
+        throw new Error("Wishlist is not initialized or product is null.");
 
     const { toggleItem } = wishlistContext;
 

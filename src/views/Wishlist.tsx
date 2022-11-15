@@ -24,7 +24,7 @@ const WishlistView = () => {
             
             <div className='scrollable flex-grow-1'>
             {
-                wishlistItems == null || wishlistItems.length == 0
+                wishlistItems === null || wishlistItems.length === 0
                 ? <p className='ms-5 mb-2'>No items in wishlist.</p>
                 : wishlistItems.map(articleNumber => (<WishlistItem key={articleNumber} product={getProduct(articleNumber) ?? null}/>)) 
             }

@@ -7,8 +7,8 @@ const Sale50PercentSection: React.FC = () => {
   return (
     <section className="mt-0">
         <div className="showcase bg-light-gray">
-          <img src={image1} className="w-md-auto"/>
-          <img src={image2} className="w-md-auto"/>
+          <img src={image1} alt="" className="w-md-auto"/>
+          <img src={image2} alt="" className="w-md-auto"/>
           <div className='position-absolute d-flex flex-column'>
             <div>
               <h1 className="text-align-center">SALE UP<br/>To 50% Off</h1>

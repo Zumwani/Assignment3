@@ -1,7 +1,7 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom';
-import { useShoppingCart } from '../Utility/ShoppingCartUtility';
-import { useWishlist } from '../Utility/WishlistUtility';
+// import { useShoppingCart } from '../Utility/ShoppingCartUtility';
+// import { useWishlist } from '../Utility/WishlistUtility';
 import IconButton from '../components/IconButton';
 
 const NavBar: React.FC = () => {
@@ -9,16 +9,16 @@ const NavBar: React.FC = () => {
   //Set color to transparent when scrollbar is at top
   const setTransparentWhenScrollbarIsAtTop = () => {
     const nav = document.querySelector("nav");
-    nav?.classList?.toggle("top", window.scrollY == 0);
+    nav?.classList?.toggle("top", window.scrollY === 0);
   }
 
   document.addEventListener('scroll', setTransparentWhenScrollbarIsAtTop);
   setTransparentWhenScrollbarIsAtTop();
 
-  const shoppingCartContext = useShoppingCart();
-  const wishlistContext = useWishlist();
-  if (shoppingCartContext == null /* || wishlistContext == null */)
-    return <></>;
+  // const shoppingCartContext = useShoppingCart();
+  // const wishlistContext = useWishlist();
+  // if (shoppingCartContext == null || wishlistContext == null)
+  //   return <></>;
 
   // const { cartQuantity } = shoppingCartContext;
   // const { wishlistQuanitity } = wishlistContext;

@@ -30,7 +30,7 @@
 }
 
 * {
-  font-family: Poppins;
+  font-family: "Poppins", sans-serif;
   -ms-scroll-chaining: none;
       overscroll-behavior: none;
 }
@@ -1066,6 +1066,7 @@ button.action.white::after {
 }
 .contact-form .error {
   border: 1px solid red;
+  color: black;
 }
 
 @media (min-width: 768px) {

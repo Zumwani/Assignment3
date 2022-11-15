@@ -9,10 +9,10 @@ interface ProductContext {
   getProduct: (articleNumber: string) => Product | null;
 }
 
-export const ProductContext = createContext<ProductContext | null>(null);
+export const Context = createContext<ProductContext | null>(null);
 
 export const useProducts = () => {
-  return useContext(ProductContext);
+  return useContext(Context);
 }
 
 export const getProduct = async (articleNumber:string) => {
@@ -38,7 +38,7 @@ export const ProductProvider: React.FC<Param> = ({ children }) => {
     });
   
     const getProduct = (articleNumber: string): Product | null =>
-      products.all.find(p => p.articleNumber == articleNumber || p.name.replaceAll(" ", "-").toLowerCase() == articleNumber) ?? null;
+      products.all.find(p => p.articleNumber === articleNumber || p.name.replaceAll(" ", "-").toLowerCase() === articleNumber) ?? null;
     
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
@@ -62,15 +62,14 @@ export const ProductProvider: React.FC<Param> = ({ children }) => {
       }
       
       fetchAllProducts();
-      console.log(products);
       forceUpdate();
   
-    }, [setProducts]);
+    }, [setProducts, products]);
 
   return (
-    <ProductContext.Provider value={{ products, getProduct }}>
+    <Context.Provider value={{ products, getProduct }}>
         {children}
-    </ProductContext.Provider>
+    </Context.Provider>
   );
 
 }

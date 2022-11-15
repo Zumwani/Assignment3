@@ -13,10 +13,10 @@ interface ShoppingCartContext {
     toCartItem: (product:Product) => CartItem
 }
 
-const ShoppingCartContext = createContext<ShoppingCartContext | null>(null);
+const Context = createContext<ShoppingCartContext | null>(null);
 
 export const useShoppingCart = () =>
-    useContext(ShoppingCartContext);
+    useContext(Context);
 
 type Param = {
     children: ReactNode
@@ -38,7 +38,7 @@ export const ShoppingCartProvider: React.FC<Param> = ({children}) => {
         
         let product = item as Product ?? (item as CartItem)?.product ?? null;
         if (product == null)
-            throw "Cannot increment since product is null";
+            return;
 
         let { articleNumber } = product;
 
@@ -66,10 +66,10 @@ export const ShoppingCartProvider: React.FC<Param> = ({children}) => {
         ({ articleNumber: product.articleNumber, product: product, quantity: 1 });
 
     return (
-        <ShoppingCartContext.Provider value={{ cartItems, cartQuantity, getItemQuantity, incrementQuantity, decrementQuantity, removeItem, toCartItem }}>
+        <Context.Provider value={{ cartItems, cartQuantity, getItemQuantity, incrementQuantity, decrementQuantity, removeItem, toCartItem }}>
             {children}
             <ShoppingCart/>
-        </ShoppingCartContext.Provider>
+        </Context.Provider>
     )
     
 }

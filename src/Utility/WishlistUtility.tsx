@@ -9,10 +9,10 @@ interface WishlistContext {
     isWishlisted: (product: Product) => boolean
 }
 
-const WishlistContext = createContext<WishlistContext | null>(null);
+const Context = createContext<WishlistContext | null>(null);
 
 export const useWishlist = () =>
-    useContext(WishlistContext);
+    useContext(Context);
 
 type Param = {
     children: ReactNode
@@ -23,7 +23,7 @@ export const WishlistProvider: React.FC<Param> = ({ children }) => {
     const [wishlistItems, setWishlistItems] = useState<string[]>([]);
 
     const wishlistQuanitity = wishlistItems?.length ?? 0;
-    const isWishlisted = (product: Product): boolean => wishlistItems?.find(articleNumber => articleNumber == product?.articleNumber) != null;
+    const isWishlisted = (product: Product): boolean => wishlistItems?.find(articleNumber => articleNumber === product?.articleNumber) != null;
 
     const toggleItem = (product: Product) => {
 
@@ -42,10 +42,10 @@ export const WishlistProvider: React.FC<Param> = ({ children }) => {
     }
 
     return (
-        <WishlistContext.Provider value={{ wishlistItems, wishlistQuanitity, toggleItem, isWishlisted }}>
+        <Context.Provider value={{ wishlistItems, wishlistQuanitity, toggleItem, isWishlisted }}>
             {children}
             <WishlistView/>
-        </WishlistContext.Provider>
+        </Context.Provider>
     )
     
 }

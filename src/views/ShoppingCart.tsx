@@ -21,7 +21,7 @@ const ShoppingCartView: React.FC = () => {
             
             <div className='scrollable flex-grow-1'>
             { 
-                cart.cartItems.length == 0
+                cart.cartItems.length === 0
                 ? <p className='ms-5 mb-2'>No items in cart.</p>
                 : cart.cartItems.map((item:CartItem) => (<ShoppingCartItem key={item.articleNumber} item={item}/>)) 
             }

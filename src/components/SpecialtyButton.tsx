@@ -9,7 +9,7 @@ const SpecialtyButton: React.FC<Params> = ({ title }) => {
     <button className="button-specialty mt-4">
       <div className='text-center'>
           <h6>{title}</h6>
-          <a className="underline">Get Started {">"}</a>
+          <a className="underline" href='#a'>Get Started {">"}</a>
       </div>
     </button>
   )

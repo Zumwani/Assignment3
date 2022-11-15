@@ -25,7 +25,7 @@ export const NavigationManager: React.FC<Param> = ({ children }) => {
             title = loc.slice(0, -1) ?? "";
         title = title.split("/")?.slice(-1)?.pop()?.replaceAll("-", " ") ?? "";
 
-        document.title = (title == "" ? "" : (capitalize(title ?? null) + " - ")) + "Fixxo";
+        document.title = (title === "" ? "" : (capitalize(title ?? null) + " - ")) + "Fixxo";
         
     }
 
@@ -35,7 +35,7 @@ export const NavigationManager: React.FC<Param> = ({ children }) => {
     useEffect(() => {
         setTitle();
         scrollToTop();
-    }, [location]);
+    }, [location, setTitle()]);
 
     return <>
         {children}
