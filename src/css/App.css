@@ -248,21 +248,21 @@ select {
 }
 
 .bg-customer-support {
-  background-image: url("../img/customer-support.svg");
+  background-image: url("img/customer-support.svg");
   background-position: center;
   background-repeat: no-repeat;
   background-size: 22px;
 }
 
 .bg-credit-card {
-  background-image: url("../img/credit-card.svg");
+  background-image: url("img/credit-card.svg");
   background-position: center;
   background-repeat: no-repeat;
   background-size: 22px;
 }
 
 .bg-delivery-truck {
-  background-image: url("../img/delivery-truck.svg");
+  background-image: url("img/delivery-truck.svg");
   background-position: center;
   background-repeat: no-repeat;
   background-size: 22px;
@@ -272,41 +272,41 @@ select {
   background-repeat: no-repeat;
 }
 .bg-model.model3 {
-  background-image: url("../img/3.png");
+  background-image: url("img/3.png");
   background-position: right;
   background-color: #CAC0BE;
 }
 .bg-model.model4 {
-  background-image: url("../img/4.png");
+  background-image: url("img/4.png");
   background-position: right;
   background-color: #E9E9E9;
 }
 .bg-model.model5 {
-  background-image: url("../img/5.png");
+  background-image: url("img/5.png");
   background-position: left;
   background-color: #75695C;
 }
 .bg-model.model6 {
-  background-image: url("../img/6.png");
+  background-image: url("img/6.png");
   background-position: right;
   background-color: #D9D9D9;
 }
 .bg-model.model7 {
-  background-image: url("../img/7.png");
+  background-image: url("img/7.png");
   background-size: cover;
   background-position: center;
   width: 825px;
   height: 664px;
 }
 .bg-model.model8 {
-  background-image: url("../img/8.png");
+  background-image: url("img/8.png");
   background-size: cover;
   background-position: center;
   width: 825px;
   height: 664px;
 }
 .bg-model.model9 {
-  background-image: url("../img/9.png");
+  background-image: url("img/9.png");
   background-size: cover;
   background-position: center;
 }
@@ -518,7 +518,7 @@ nav .container:last-child {
 }
 
 .logo {
-  background-image: url("../img/logo.svg");
+  background-image: url("img/logo.svg");
   background-repeat: no-repeat;
   background-position: left;
   margin-top: -12px;
@@ -939,13 +939,13 @@ button.action.white::after {
   scale: 105%;
 }
 .button-specialty:nth-of-type(1) {
-  background-image: url("../img/specialty1.png");
+  background-image: url("img/specialty1.png");
 }
 .button-specialty:nth-of-type(2) {
-  background-image: url("../img/specialty2.png");
+  background-image: url("img/specialty2.png");
 }
 .button-specialty:nth-of-type(3) {
-  background-image: url("../img/specialty3.png");
+  background-image: url("img/specialty3.png");
 }
 
 .sale-button {
