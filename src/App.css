@@ -406,11 +406,15 @@ select {
   overflow-x: auto;
 }
 
-[badge] {
+.left-0 {
+  left: 0;
+}
+
+[data-badge] {
   position: relative;
 }
-[badge]::after {
-  content: attr(badge);
+[data-badge]::after {
+  content: attr(data-badge);
   position: absolute;
   top: -26px;
   right: -4px;

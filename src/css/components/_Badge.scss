@@ -1,9 +1,9 @@
-[badge] {
+[data-badge] {
     
     position: relative;
     
     &::after {
-        content: attr(badge);
+        content: attr(data-badge);
         position: absolute;
         top: -26px;
         right: -4px;

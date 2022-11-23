@@ -13,6 +13,7 @@ import ProductView from './views/ProductView';
 import ContactView from './views/Contact';
 import NotFoundView from './views/NotFound';
 import './App.css';
+import CrudTest from './views/Crud-Test';
 
 const App: React.FC = () =>
 (
@@ -29,6 +30,7 @@ const App: React.FC = () =>
                   <Route path='/products' element={<ProductsView/>}/>
                   <Route path='/products/:id' element={<ProductsView/>}/>
                   <Route path="/contact" element={<ContactView/>}/>
+                  <Route path='/crud-test' element={<CrudTest/>}/>
                   <Route path="*" element={<NotFoundView/>}/>
               </Routes>
               <Footer/>
