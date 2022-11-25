@@ -12,8 +12,8 @@ import ProductsView from './views/ProductsView';
 import ProductView from './views/ProductView';
 import ContactView from './views/Contact';
 import NotFoundView from './views/NotFound';
-import './App.css';
 import CrudTest from './views/Crud-Test';
+import './App.css';
 
 const App: React.FC = () =>
 (
@@ -25,6 +25,7 @@ const App: React.FC = () =>
               <NavBar/>
               <Routes>
                   <Route path="/" element={<MainView/>}/>
+                  <Route path="/Assignment3" element={<MainView/>}/>
                   <Route path='/product/:name' element={<ProductView/>}/>
                   <Route path="/categories" element={<CategoriesView/>}/>
                   <Route path='/products' element={<ProductsView/>}/>
