@@ -6,11 +6,12 @@ const url = "https://win22-webapi.azurewebsites.net/api/products/";
 
 export interface ProductContext {
   products: ProductList, 
+  getProducts: () => Promise<Product[]>;
   getProduct: (articleNumber: string) => Product | null;
   createProduct: (product: CreateProduct) => void;
-  readProduct: (articleNumber: number) => void;
+  readProduct: (articleNumber: string) => Promise<Product|null>;
   updateProduct: (product: Product) => void;
-  deleteProduct: (product: Product|number) => void;
+  deleteProduct: (product: Product|string) => void;
 }
 
 const Context = createContext<ProductContext | null>(null);
@@ -77,7 +78,7 @@ export const ProductProvider: React.FC<Param> = ({ children }) => {
 
   const createProduct = async (product: CreateProduct) => {
 
-    const result = await fetch(baseURL, {
+    let result = await fetch(baseURL, {
       method: "post",
       headers:{
         "Content-Type": "application/json"
@@ -85,29 +86,79 @@ export const ProductProvider: React.FC<Param> = ({ children }) => {
       body: JSON.stringify(product)
     });
 
-    if (result.status == 201)
-        console.log("Product created:/n" + await result.json());
+    if (result.status === 201)
+        console.log("Product created: " + result.status);
     else
         console.log("Product could not be created: " + result.status);
 
   }
   
-  const readProduct = (articleNumber: number) => {
-    return 200;
+  const readProduct = async (articleNumber: string) => {
+    
+    let result = await fetch(baseURL + articleNumber, {
+      method: "get"
+    });
+
+    const json = await result.json();
+
+    if (result.status === 201)
+        console.log("Product created:/n" + json);
+    else
+        console.log("Product could not be created: " + result.status);
+
+    return json as Product;
+
   }
   
-  const updateProduct = (product: Product) => {
-    return 200;
+  const updateProduct = async (product: Product) => {
+    
+    let result = await fetch(baseURL + product.articleNumber, {
+      method: "put",
+      headers:{
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(product)
+    });
+
+    if (result.status === 200)
+        console.log("Product updated: " + result.status);
+    else
+        console.log("Product could not be updated: " + result.status);
+
   }
   
-  const deleteProduct = (product: Product|number) => {
-    return 200;
+  const deleteProduct = async (product: Product|string) => {
+    
+    const articleNumber = product as string ?? (product as Product)?.articleNumber;
+
+    let result = await fetch(baseURL + articleNumber, {
+      method: "delete"
+    });
+
+    if (result.status === 204)
+        console.log("Product deleted: " + result.status);
+    else
+        console.log("Product could not be deleted: " + result.status);
+
+  }
+
+  const getProducts = async () => {
+    
+    let result = await fetch(baseURL, {
+      method: "get",
+      headers:{
+        "Content-Type": "application/json"
+      },
+    });
+
+    return await result.json();
+
   }
   
   //#endregion
     
   return (
-    <Context.Provider value={{ products, getProduct, createProduct, readProduct, updateProduct, deleteProduct }}>
+    <Context.Provider value={{ products, getProduct, getProducts, createProduct, readProduct, updateProduct, deleteProduct }}>
         {children}
     </Context.Provider>
   );

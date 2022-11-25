@@ -12,6 +12,10 @@
     background-color: var(--color-light-gray);
 }
 
+.bg-red {
+    background-color: red;
+}
+
 .bg-customer-support {
     background-image: url("img/customer-support.svg");
     background-position: center;
@@ -157,4 +161,12 @@
 
 .left-0 {
     left: 0;
+}
+
+.o-0 {
+    opacity: 0;
+}
+
+.mt-10 {
+    margin-top: 92.5px;
 }

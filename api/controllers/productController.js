@@ -1,32 +1,35 @@
+const { randomUUID } = require("crypto");
 const express = require("express");
-const { resolve } = require("path");
+
 const controller = express.Router();
 let products = require("../data/simulated_database");
 
 module.exports = controller;
 
-// interface Product {
-//   articleNumber: string,
-//   name: string,
-//   imageName: string,
-//   rating: number,
-//   category: string,
-//   description?: string,
-//   price: number
-// }
+controller.param("id", (request, response, next, articleNumber) => {
+  request.product = products.find(p => p.articleNumber == articleNumber);
+  if (request.product === undefined)
+    response.status(404);
+  else
+    next();
+});
 
-controller.post("/", (request, response) => {
+//http://localhost/api/products
+controller.route("/").
+get((_, response) => {
+  response.status(200).json(products ?? []);
+}).
+post((request, response) => {
 
-  console.log(request.body);
   const { name, imageName, rating, category, description, price } = request.body;
 
-  if (name == "" || imageName == "" || rating == "" || category == "" || description == "" || price == "") {
+  if (name == "" || imageName == "" || category == "" || description == "" || price == 0) {
     response.status(400);
     return;
   };
-
+  
   let product = {
-    articleNumber: (products?.length ?? -1) + 1,
+    articleNumber: randomUUID(),
     name: name,
     imageName: imageName,
     rating: rating,
@@ -37,39 +40,37 @@ controller.post("/", (request, response) => {
   
   products.push(product);
   response.status(201).json(product);
+  console.log(201);
     
 });
 
-controller.get("/", (_, response) => {
-  response.status(200).json(products ?? []);
+//http://localhost/api/products/:id
+controller.route("/:id").
+
+get((request, response) => {
+    response.status(200).json(request.product);
+}).
+
+put((request, response) => {
+
+  const { name, imageName, rating, category, description, price } = request.body;
+
+  products.forEach(p => {
+    if (p.articleNumber === request.product.articleNumber) {
+      p.name = name ? name : p.name;
+      p.imageName = imageName ? imageName : p.imageName;
+      p.rating = rating ? rating : p.rating;
+      p.category = category ? category : p.category;
+      p.description = description ? description : p.description;
+      p.price = price ? price : p.price;
+    }
+  });
+
+  response.status(200).json(request.user);
+
+}).
+
+delete((request, response) => {
+  products = products.filter(p => p.articleNumber !== request.product.articleNumber);
+  response.status(204);
 });
-
-// controller.get("/", (request, response) => {
-
-//   let product = products.find(p => p.articleNumber == request.body.id);
-
-//   return (
-//     product == null 
-//     ? response.status(201).json(product) 
-//     : response.status(404));
-    
-// });
-
-// const createProduct = (product/* : Product */) => {
-//   return 200;
-// }
-
-// //GET
-// const readProduct = (articleNumber/* : number */) => {
-//   return 200;
-// }
-
-// //
-// const updateProduct = (product/* : Product */) => {
-//   return 200;
-// }
-
-// //
-// const deleteProduct = (product/* : Product|number */) => {
-//   return 200;
-// }

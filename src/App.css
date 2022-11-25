@@ -162,6 +162,17 @@ select {
   padding-right: 12px;
 }
 
+table:not(.no-border) th, table:not(.no-border) td {
+  border: lightgray 1px solid;
+}
+table:not(.no-border) Button {
+  opacity: 0;
+  transition: all 0.1s;
+}
+table:not(.no-border) tr:hover > Button {
+  opacity: 1;
+}
+
 .weird-align {
   display: grid;
   width: -webkit-fit-content;
@@ -245,6 +256,10 @@ select {
 
 .bg-light-gray {
   background-color: var(--color-light-gray);
+}
+
+.bg-red {
+  background-color: red;
 }
 
 .bg-customer-support {
@@ -408,6 +423,14 @@ select {
 
 .left-0 {
   left: 0;
+}
+
+.o-0 {
+  opacity: 0;
+}
+
+.mt-10 {
+  margin-top: 92.5px;
 }
 
 [data-badge] {

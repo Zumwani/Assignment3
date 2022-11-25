@@ -147,6 +147,23 @@ select {
     padding-right: 12px;
 }
 
+table:not(.no-border) {
+
+    th, td {
+        border: lightgray 1px solid;
+    }
+
+    Button {
+        opacity: 0;
+        transition: all 0.1s;
+    }
+
+    tr:hover > Button {
+        opacity: 1;
+    }
+
+}
+
 //#endregion
 //#region Weird align section
 
@@ -235,19 +252,10 @@ select {
 //#endregion
 //#region Responsive
 
-@media only screen and (max-width: 1200px) {
-
-    h5 {
-        // text-align: center;
-    }
-
-}
-
 .w-md-auto {
 
     @media only screen and (max-width: 950px) {
         width: calc(80vw) !important;
-        // width: auto !important;
     }
     
     }
