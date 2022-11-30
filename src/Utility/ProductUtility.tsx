@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode, useContext, useEffect, useReducer, useState } from "react";
+import React, { createContext, useContext, useEffect, useReducer, useState } from "react";
 import { CreateProduct, Product } from "../models/Product";
 import { ProductList } from "../models/ProductList";
 
@@ -23,11 +23,7 @@ export const getProduct = async (articleNumber:string) => {
   return await result.json();
 }
 
-type Param = {
-  children: ReactNode
-}
-
-export const ProductProvider: React.FC<Param> = ({ children }) => {
+export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   
   //#region Normal products
 
