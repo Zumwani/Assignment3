@@ -261,3 +261,36 @@ table:not(.no-border) {
     }
     
 //#endregion
+
+.status {
+
+    border-radius: 12px;
+    color: white !important;
+    padding: 22px;
+    margin-bottom: 22px;
+
+    &.success { background-color: #26c281; animation-name: fadeInOpacity;}
+    &.error { background-color: red; animation-name: fadeInOpacity;}
+
+    h5 {
+        margin-bottom: 12px;
+    }
+
+    opacity: 0;
+	animation-iteration-count: 1;
+	animation-timing-function: ease-in;
+	animation-duration: 2s;
+
+}
+@keyframes fadeInOpacity {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+    @keyframes showAnimation {
+          from { opacity: 0; }
+          to { opacity: 1; }
+    }

@@ -2,17 +2,9 @@ const { randomUUID } = require("crypto");
 const express = require("express");
 
 const controller = express.Router();
-let products = require("../data/simulated_database");
+let { products, saveProducts } = require("../data/simulated_database");
 
 module.exports = controller;
-
-controller.param("id", (request, response, next, articleNumber) => {
-  request.product = products.find(p => p.articleNumber == articleNumber);
-  if (request.product === undefined)
-    response.status(404);
-  else
-    next();
-});
 
 //http://localhost/api/products
 controller.route("/").
@@ -23,8 +15,8 @@ post((request, response) => {
 
   const { name, imageName, rating, category, description, price } = request.body;
 
-  if (name == "" || imageName == "" || category == "" || description == "" || price == 0) {
-    response.status(400);
+  if (name == "" || imageName == "" || category == "" || description == ""  || price == "" || rating == "") {
+    response.status(400).send(null);
     return;
   };
   
@@ -39,9 +31,18 @@ post((request, response) => {
   };
   
   products.push(product);
+  saveProducts(products);
   response.status(201).json(product);
   console.log(201);
-    
+  
+});
+
+controller.param("id", (request, response, next, articleNumber) => {
+  request.product = products.find(p => p.articleNumber == articleNumber);
+  if (!request.product)
+    response.status(404).send(null);
+  else
+    next();
 });
 
 //http://localhost/api/products/:id
@@ -65,6 +66,7 @@ put((request, response) => {
       p.price = price ? price : p.price;
     }
   });
+  saveProducts(products);
 
   response.status(200).json(request.user);
 
@@ -72,5 +74,7 @@ put((request, response) => {
 
 delete((request, response) => {
   products = products.filter(p => p.articleNumber !== request.product.articleNumber);
-  response.status(204);
+  saveProducts(products);
+  console.log(products.length);
+  response.status(204).send(null);
 });

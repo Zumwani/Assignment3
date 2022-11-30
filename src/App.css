@@ -246,6 +246,25 @@ table:not(.no-border) tr:hover > Button {
   }
 }
 
+.status {
+  border-radius: 12px;
+  color: white !important;
+  padding: 22px;
+  margin-bottom: 22px;
+  opacity: 0;
+  opacity: 1;
+  transition: all 0.1s ease;
+}
+.status.success {
+  background-color: #26c281;
+}
+.status.error {
+  background-color: red;
+}
+.status h5 {
+  margin-bottom: 12px;
+}
+
 .c-white {
   color: white;
 }

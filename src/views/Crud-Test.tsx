@@ -1,3 +1,4 @@
+import { stat } from 'fs';
 import React, { useEffect, useState } from 'react'
 import Input from '../components/Contact/Input'
 import TextArea from '../components/Contact/TextArea'
@@ -6,63 +7,147 @@ import TabControl from '../components/TabControl';
 import { CreateProduct, DefaultCreateProduct, Product } from '../models/Product'
 import { ProductContext, useProducts } from '../Utility/ProductUtility';
 
-type SetTab = [string, React.Dispatch<React.SetStateAction<string>>]
-type ReadForm = [string, React.Dispatch<React.SetStateAction<string>>]
-type UpdateForm = [Product, React.Dispatch<React.SetStateAction<Product>>]
-type DeleteForm = ReadForm;
+interface TabParam {
+
+    context: ProductContext;
+
+    setIsBusy: () => void;
+    setError:(message:string) => void;
+    setSuccess: (message:string) => void;
+
+    selectedTab: string;
+    setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
+
+    readForm: string;
+    setReadForm: React.Dispatch<React.SetStateAction<string>>;
+
+    updateForm: Product;
+    setUpdateForm: React.Dispatch<React.SetStateAction<Product>>;
+
+    deleteForm: string;
+    setDeleteForm: React.Dispatch<React.SetStateAction<string>>;
+
+}
+
+type Status = {
+    isBusy: boolean;
+    isError: boolean;
+    message: string;
+}
 
 const CrudTest: React.FC = () => {
 
-    const crud = useProducts();
+    const context = useProducts();
 
-    const setTab: SetTab = useState<string>("list");
-    const readForm: ReadForm = useState<string>("");
-    const removeForm: DeleteForm = useState<string>("");
-    const updateForm: UpdateForm = useState<Product>({ articleNumber: "", name: "", imageName: "", rating: 0, category: "", description: "", price: 0 });
+    const [status, setStatus] = useState<Status>({ isBusy: false, isError: false, message: "" });
 
-    if (crud == null)
+    const [selectedTab, setSelectedTab] = useState<string>("list");
+    const [readForm, setReadForm] = useState<string>("");
+    const [updateForm, setUpdateForm] = useState<Product>({ articleNumber: "", name: "", imageName: "", rating: 0, category: "", description: "", price: 0 });
+    const [deleteForm, setDeleteForm] = useState<string>("");
+
+    const setIsBusy = () => setStatus({ isBusy: true, isError: false, message: "" });
+    const setSuccess = (message:string) => setStatus({ isBusy: false, isError: false, message: message });
+
+    const setError = (error: any) => {
+        if (typeof(error) === "string")
+            setStatus({ isBusy: false, isError: true, message: error });
+        else if (error instanceof Error)
+            setStatus({ isBusy: false, isError: true, message: error.message });
+    };
+
+    if (context == null)
         return <></>
 
+    const param: TabParam = { context, setIsBusy, setError, setSuccess, selectedTab, setSelectedTab, readForm, setReadForm, updateForm, setUpdateForm, deleteForm, setDeleteForm }
+
+    const onTabChanged = (tab: string) =>
+        setStatus({ isBusy: false, isError: false, message: "" });
+
     return (
-        <TabControl className='main-layout' tab={setTab}>
-            {ListTab(crud, setTab, readForm, updateForm, removeForm)}
-            {CreateTab(crud)}
-            {ReadTab(crud, setTab, readForm)}
-            {UpdateTab(crud, setTab, updateForm)}
-            {DeleteTab(crud, setTab, removeForm)}
-        </TabControl>
+        <div className='main-layout'>
+            
+            {
+
+                status?.isBusy ?
+                <p>Sending request...</p>
+                : null
+
+            }
+
+            {
+
+                status?.message && status.isError ?
+                (<div className='status error'>
+                    <h5>Error:</h5>
+                    <p>{status.message}</p>
+                </div>)
+                : null
+
+            }
+            
+            {
+
+                status?.message && !status.isError ?
+                (<div className='status success'>
+                    <h5>Success:</h5>
+                    <p>{status.message}</p>
+                </div>)
+                : null
+
+            }
+
+            <TabControl tab={[selectedTab, setSelectedTab]} onTabChanged={onTabChanged}>
+                {ListTab(param)}
+                {CreateTab(param)}
+                {ReadTab(param)}
+                {UpdateTab(param)}
+                {DeleteTab(param)}
+            </TabControl>
+
+        </div>
     );
 
 }
 
-const ListTab = (context: ProductContext, TabControl: SetTab, readForm: ReadForm, updateForm: UpdateForm, removeForm: DeleteForm) => {
+const ListTab = (param: TabParam) => {
+
+    const { setIsBusy, setError, setSuccess, selectedTab, setSelectedTab, context, setReadForm, setUpdateForm, setDeleteForm } = param;
 
     const [products, setProducts] = useState<Product[]>();
-    
-    const [articleNumberToRead, setarticleNumberToRead] = readForm;
-    const [productToUpdate, setProductToUpdate] = updateForm;
-    const [articleNumberToRemove, setArticleNumberToRemove] = removeForm;
-    const [tab, setTab] = TabControl;
 
     const refresh = () => {
-        context.getProducts().then(setProducts);
+
+        if (selectedTab !== "list")
+            return;
+
+        setIsBusy();
+        context.getProducts().
+        then(products => {
+            setSuccess(products.length + " products retrieved.");
+            setProducts(products);
+        }).catch((e) => {
+            setError(e);
+            setProducts([]);
+        });
+
     };
 
-    useEffect(refresh, [tab]);
+    useEffect(refresh, [selectedTab]);
 
     const onReadClick = (product: Product) => {
-        setarticleNumberToRead(product.articleNumber);
-        setTab("read");
+        setReadForm(product.articleNumber);
+        setSelectedTab("read");
     }
 
     const onUpdateClick = (product: Product) => {
-        setProductToUpdate(product);
-        setTab("update");
+        setUpdateForm(product);
+        setSelectedTab("update");
     }
     
     const onDeleteClick = (product: Product) => {
-        setArticleNumberToRemove(product.articleNumber);
-        setTab("delete");
+        setDeleteForm(product.articleNumber);
+        setSelectedTab("delete");
     }
 
     return (
@@ -100,19 +185,29 @@ const ListTab = (context: ProductContext, TabControl: SetTab, readForm: ReadForm
 
 }
 
-const CreateTab = (context: ProductContext) => {
+const CreateTab = (param: TabParam) => {
 
+    const { setIsBusy, setError, setSuccess, context } = param;
     const [product, setProduct] = useState<CreateProduct>(DefaultCreateProduct());
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let {id, value} = e.target;
         setProduct({...product, [id]: value});
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const onSubmit = (e: React.FormEvent) => {
+        
         e.preventDefault();
-        context.createProduct(product);
+    
+        setIsBusy();
+
+        context.createProduct(product).
+        then((product) => setSuccess("Product '" + product.articleNumber + "' created.")).
+        catch(setError);
+
+        //Reset to default values
         setProduct(DefaultCreateProduct());
+
     };
 
     return (
@@ -123,32 +218,32 @@ const CreateTab = (context: ProductContext) => {
                     <table cellPadding={10} className="no-border mt-5 mx-auto">
                         <tr>
                             <td>Name:</td>
-                            <td><Input id="name" placeholder='Name' value={product?.name} onChange={handleChange} onKeyUp={() => {}}/></td>
+                            <td><Input id="name" placeholder='Name' value={product?.name} onChange={onChange} onKeyUp={() => {}}/></td>
                         </tr>
                         <tr>
                             <td>Image:</td>
-                            <td><Input id="imageName" placeholder='Image' value={product?.imageName} onChange={handleChange} onKeyUp={() => {}}/></td>
+                            <td><Input id="imageName" placeholder='Image' value={product?.imageName} onChange={onChange} onKeyUp={() => {}}/></td>
                         </tr>
                         <tr>
                             <td>Category:</td>
-                            <td><Input id="category" placeholder='Category' value={product?.category} onChange={handleChange} onKeyUp={() => {}}/></td>
+                            <td><Input id="category" placeholder='Category' value={product?.category} onChange={onChange} onKeyUp={() => {}}/></td>
                         </tr>
                         <tr>
                             <td>Price:</td>
-                            <td><Input id="price"  type='number' value={product?.price.toString()} onChange={handleChange} onKeyUp={() => {}}/></td>
+                            <td><Input id="price"  type='number' value={product?.price.toString()} onChange={onChange} onKeyUp={() => {}}/></td>
                         </tr>
                         <tr>
                             <td>Rating:</td>
-                            <td><Input id="rating" type='number' value={product?.rating.toString()} onChange={handleChange} onKeyUp={() => {}}/></td>
+                            <td><Input id="rating" type='number' value={product?.rating.toString()} onChange={onChange} onKeyUp={() => {}}/></td>
                         </tr>
                         <tr>
                             <td>Description:</td>
-                            <td><TextArea id="description" placeholder='Description' value={product?.description ?? ""} onChange={handleChange} onKeyUp={() => {}}/></td>
+                            <td><TextArea id="description" placeholder='Description' value={product?.description ?? ""} onChange={onChange} onKeyUp={() => {}}/></td>
                         </tr>
                     </table>
                 </form>
 
-                <button onClick={handleSubmit} className="mt-4">Post</button>
+                <button onClick={onSubmit} className="mt-4">Post</button>
 
             </div>
         </Tab>
@@ -156,24 +251,33 @@ const CreateTab = (context: ProductContext) => {
 
 }
 
-const ReadTab = (context: ProductContext, TabControl: SetTab, form: ReadForm) => {
-    
-    const [articleNumber, setArticleNumber] = form;
+const ReadTab = (param: TabParam) => {
+
+    const { setIsBusy, setError, setSuccess, selectedTab, readForm, setReadForm, context } = param;
+
     const [product, setProduct] = useState<Product|null>();
-    const [tab, setTab] = TabControl;
 
     useEffect(() => {
         setProduct(null);
-    }, TabControl);
+    }, [selectedTab]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let {value} = e.target;
-        setArticleNumber(value);
+        setReadForm(value);
     };
 
-    const handleCreateSubmit = async (e: React.FormEvent) => {
+    const onSubmit = async (e: React.FormEvent) => {
+
         e.preventDefault();
-        setProduct(await context.readProduct(articleNumber));
+        
+        setIsBusy();
+        context.readProduct(readForm).
+        then((product) => {
+            setProduct(product);
+            setSuccess("Retrieved product '" + product.articleNumber + "'.");
+        }).
+        catch(e => { setError(e); setProduct(null); });
+        
     };
     
     return (
@@ -184,19 +288,19 @@ const ReadTab = (context: ProductContext, TabControl: SetTab, form: ReadForm) =>
                     <table cellPadding={10} className="no-border mt-5 mx-auto">
                         <tr>
                             <td>Article Number:</td>
-                            <td><Input id="articleNumber" placeholder='Article Number' value={articleNumber} onChange={handleChange} onKeyUp={() => {}}/></td>
+                            <td><Input id="articleNumber" placeholder='Article Number' value={readForm} onChange={handleChange} onKeyUp={() => {}}/></td>
                         </tr>
                     </table>
                 </form>
 
-                <button onClick={handleCreateSubmit} className="mt-4">Read</button>
+                <button onClick={onSubmit} className="mt-4">Read</button>
 
                 {
                     product == undefined ? null : (
                         <table cellPadding={10} className="mt-5 mx-auto">
                                 <tr>
                                     <td>Article Number:</td>
-                                    <td>{product.articleNumber}</td>
+                                    <td>{product?.articleNumber}</td>
                                 </tr>
                                 <tr>
                                     <td>Name:</td>
@@ -212,11 +316,11 @@ const ReadTab = (context: ProductContext, TabControl: SetTab, form: ReadForm) =>
                                 </tr>
                                 <tr>
                                     <td>Price:</td>
-                                    <td>{product?.price.toString()}</td>
+                                    <td>{product?.price?.toString()}</td>
                                 </tr>
                                 <tr>
                                     <td>Rating:</td>
-                                    <td>{product?.rating.toString()}</td>
+                                    <td>{product?.rating?.toString()}</td>
                                 </tr>
                                 <tr>
                                     <td>Description:</td>
@@ -232,21 +336,28 @@ const ReadTab = (context: ProductContext, TabControl: SetTab, form: ReadForm) =>
 
 }
 
-const UpdateTab = (context: ProductContext, TabControl: SetTab, form: UpdateForm) => {
+const UpdateTab = (param: TabParam) => {
 
-    const [product, setProduct] = form;
-    const [tab, setTab] = TabControl;
+    const { setIsBusy, setError, setSuccess, updateForm, setUpdateForm, setSelectedTab, context } = param;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let {id, value} = e.target;
-        setProduct({...product, [id]: value});
+        setUpdateForm({...updateForm, [id]: value});
     };
 
     const handleSubmit = (e: React.FormEvent) => {
+
         e.preventDefault();
-        context.updateProduct(product);
-        setProduct({ articleNumber: "", name: "", imageName: "", rating: 0, category: "", description: "", price: 0 });
-        setTab("list");
+
+        setIsBusy();
+        context.updateProduct(updateForm).
+        then(() => {
+            setTimeout(() => setSelectedTab("list"), 1000);
+            setUpdateForm({ articleNumber: "", name: "", imageName: "", rating: 0, category: "", description: "", price: 0 });
+            return setSuccess("Product '" + updateForm.articleNumber + "' updated. Returning to list tab...");
+        }).
+        catch(setError);
+
     };
 
     return (
@@ -257,31 +368,31 @@ const UpdateTab = (context: ProductContext, TabControl: SetTab, form: UpdateForm
                     <table cellPadding={10} className="no-border mt-5 mx-auto">
                         <tr>
                             <td>Article Number:</td>
-                            <td><Input id="articleNumber" placeholder='Article Number' value={product?.articleNumber} onChange={handleChange} onKeyUp={() => {}}/></td>
+                            <td><Input id="articleNumber" placeholder='Article Number' value={updateForm?.articleNumber} onChange={handleChange} onKeyUp={() => {}}/></td>
                         </tr>
                         <tr>
                             <td>Name:</td>
-                            <td><Input id="name" placeholder='Name' value={product?.name} onChange={handleChange} onKeyUp={() => {}}/></td>
+                            <td><Input id="name" placeholder='Name' value={updateForm?.name} onChange={handleChange} onKeyUp={() => {}}/></td>
                         </tr>
                         <tr>
                             <td>Image:</td>
-                            <td><Input id="imageName" placeholder='Image' value={product?.imageName} onChange={handleChange} onKeyUp={() => {}}/></td>
+                            <td><Input id="imageName" placeholder='Image' value={updateForm?.imageName} onChange={handleChange} onKeyUp={() => {}}/></td>
                         </tr>
                         <tr>
                             <td>Category:</td>
-                            <td><Input id="category" placeholder='Category' value={product?.category} onChange={handleChange} onKeyUp={() => {}}/></td>
+                            <td><Input id="category" placeholder='Category' value={updateForm?.category} onChange={handleChange} onKeyUp={() => {}}/></td>
                         </tr>
                         <tr>
                             <td>Price:</td>
-                            <td><Input id="price"  type='number' value={product?.price.toString()} onChange={handleChange} onKeyUp={() => {}}/></td>
+                            <td><Input id="price"  type='number' value={updateForm?.price.toString()} onChange={handleChange} onKeyUp={() => {}}/></td>
                         </tr>
                         <tr>
                             <td>Rating:</td>
-                            <td><Input id="rating" type='number' value={product?.rating.toString()} onChange={handleChange} onKeyUp={() => {}}/></td>
+                            <td><Input id="rating" type='number' value={updateForm?.rating.toString()} onChange={handleChange} onKeyUp={() => {}}/></td>
                         </tr>
                         <tr>
                             <td>Description:</td>
-                            <td><TextArea id="description" placeholder='Description' value={product?.description ?? ""} onChange={handleChange} onKeyUp={() => {}}/></td>
+                            <td><TextArea id="description" placeholder='Description' value={updateForm?.description ?? ""} onChange={handleChange} onKeyUp={() => {}}/></td>
                         </tr>
                     </table>
                 </form>
@@ -294,21 +405,28 @@ const UpdateTab = (context: ProductContext, TabControl: SetTab, form: UpdateForm
 
 }
 
-const DeleteTab = (context: ProductContext, TabControl: SetTab, form: DeleteForm) => {
+const DeleteTab = (param: TabParam) => {
 
-    const [articleNumber, setArticleNumber] = form;
-    const [tab, setTab] = TabControl;
+    const { setIsBusy, setError, setSuccess, deleteForm, setDeleteForm, setSelectedTab, context } = param;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let {value} = e.target;
-        setArticleNumber(value);
+        setDeleteForm(value);
     };
 
-    const handleCreateSubmit = (e: React.FormEvent) => {
+    const onSubmit = (e: React.FormEvent) => {
+
         e.preventDefault();
-        context.deleteProduct(articleNumber);
-        setArticleNumber("");
-        setTab("list");
+
+        setIsBusy();
+        context.deleteProduct(deleteForm).
+        then(() => {
+            setDeleteForm("");
+            setTimeout(() => setSelectedTab("list"), 1000);
+            return setSuccess("Product '" + deleteForm + "' deleted. Returning to list tab...");
+        }).
+        catch(setError);
+
     };
     
     return (
@@ -319,12 +437,12 @@ const DeleteTab = (context: ProductContext, TabControl: SetTab, form: DeleteForm
                     <table cellPadding={10} className="no-border mt-5 mx-auto">
                         <tr>
                             <td>Article Number:</td>
-                            <td><Input id="articleNumber" placeholder='Article Number' value={articleNumber} onChange={handleChange} onKeyUp={() => {}}/></td>
+                            <td><Input id="articleNumber" placeholder='Article Number' value={deleteForm ?? ""} onChange={handleChange} onKeyUp={() => {}}/></td>
                         </tr>
                     </table>
                 </form>
 
-                <button onClick={handleCreateSubmit} className="mt-4">Delete</button>
+                <button onClick={onSubmit} className="mt-4">Delete</button>
 
             </div>
         </Tab>

@@ -1,0 +1,29 @@
+[
+  {
+    "articleNumber": "d2240310-40da-4f86-af51-ea1bb6ebc833",
+    "name": "test",
+    "imageName": "test",
+    "rating": 4,
+    "category": "test",
+    "description": "test",
+    "price": 10
+  },
+  {
+    "articleNumber": "9177121b-90d4-44c7-98c2-7639a53d4ba8",
+    "name": "test",
+    "imageName": "test",
+    "rating": 4,
+    "category": "test",
+    "description": "test",
+    "price": 10
+  },
+  {
+    "articleNumber": "e44cafd4-3efe-4868-b540-3cf04e6f5691",
+    "name": "test",
+    "imageName": "test",
+    "rating": 4,
+    "category": "test",
+    "description": "test",
+    "price": 10
+  }
+]

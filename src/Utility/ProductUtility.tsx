@@ -8,10 +8,10 @@ export interface ProductContext {
   products: ProductList, 
   getProducts: () => Promise<Product[]>;
   getProduct: (articleNumber: string) => Product | null;
-  createProduct: (product: CreateProduct) => void;
-  readProduct: (articleNumber: string) => Promise<Product|null>;
-  updateProduct: (product: Product) => void;
-  deleteProduct: (product: Product|string) => void;
+  createProduct: (product: CreateProduct) => Promise<Product>;
+  readProduct: (articleNumber: string) => Promise<Product>;
+  updateProduct: (product: Product) => Promise<void>;
+  deleteProduct: (product: Product|string|null) => Promise<void>;
 }
 
 const Context = createContext<ProductContext | null>(null);
@@ -73,7 +73,7 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
   const baseURL = "http://localhost:5000/api/products/";
 
   const createProduct = async (product: CreateProduct) => {
-
+    
     let result = await fetch(baseURL, {
       method: "post",
       headers:{
@@ -82,32 +82,32 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
       body: JSON.stringify(product)
     });
 
-    if (result.status === 201)
-        console.log("Product created: " + result.status);
+    if (result.status == 201)
+      return await result.json() as Product;
     else
-        console.log("Product could not be created: " + result.status);
+      throw new Error("The product could not be created.");
+
 
   }
   
   const readProduct = async (articleNumber: string) => {
     
+    if (!articleNumber)
+      throw new Error("Article number cannot be null.");
+
     let result = await fetch(baseURL + articleNumber, {
       method: "get"
     });
 
-    const json = await result.json();
-
-    if (result.status === 201)
-        console.log("Product created:/n" + json);
+    if (result.status == 200)
+      return await result.json() as Product;
     else
-        console.log("Product could not be created: " + result.status);
-
-    return json as Product;
+      throw new Error("The product '" + articleNumber + "' could not be found.");
 
   }
   
   const updateProduct = async (product: Product) => {
-    
+
     let result = await fetch(baseURL + product.articleNumber, {
       method: "put",
       headers:{
@@ -116,25 +116,21 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
       body: JSON.stringify(product)
     });
 
-    if (result.status === 200)
-        console.log("Product updated: " + result.status);
-    else
-        console.log("Product could not be updated: " + result.status);
+    if (result.status !== 200)
+      throw new Error("Product '" + product.articleNumber + "' could not be updated.");
 
   }
   
-  const deleteProduct = async (product: Product|string) => {
+  const deleteProduct = async (product: Product|string|null) => {
     
     const articleNumber = product as string ?? (product as Product)?.articleNumber;
 
     let result = await fetch(baseURL + articleNumber, {
       method: "delete"
     });
-
-    if (result.status === 204)
-        console.log("Product deleted: " + result.status);
-    else
-        console.log("Product could not be deleted: " + result.status);
+    
+    if (result.status !== 204)
+      throw new Error("Product '" + articleNumber + "' could not be deleted.");
 
   }
 
@@ -142,7 +138,7 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
     
     let result = await fetch(baseURL, {
       method: "get",
-      headers:{
+      headers: {
         "Content-Type": "application/json"
       },
     });

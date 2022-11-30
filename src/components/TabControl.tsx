@@ -5,6 +5,7 @@ type Params = {
     children: JSX.Element[];
     className?: string;
     tab?: [string, React.Dispatch<React.SetStateAction<string>>];
+    onTabChanged?: (tab: string) => void
 }
 
 type Tab = {
@@ -12,7 +13,7 @@ type Tab = {
     header: string;
 }
 
-const TabControl: React.FC<Params> = ({ children, className, tab }) => {
+const TabControl: React.FC<Params> = ({ children, className, tab, onTabChanged }) => {
 
     const [externalSelectedTab, setExternalSelectedTab] = tab ?? [];
     const [selectedTab, setSelectedTab] = useState(children[0].props?.id ?? "");
@@ -47,6 +48,9 @@ const TabControl: React.FC<Params> = ({ children, className, tab }) => {
         if (setExternalSelectedTab)
             setExternalSelectedTab(selectedTab);
         
+            if (onTabChanged)
+                onTabChanged(selectedTab);
+
     }, [selectedTab]);
     
     //Reset isSettingTab after 100 ms, since it can't be set externally first time otherwise
@@ -74,7 +78,7 @@ const TabControl: React.FC<Params> = ({ children, className, tab }) => {
     }
 
     return (
-        <div className={ 'tab-control' + (className ? " " + className : null) }>
+        <div className={ 'tab-control ' + (className ?? "") }>
             <fieldset>
                 {
                     children.map((tab) => {
