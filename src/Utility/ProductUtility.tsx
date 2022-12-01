@@ -2,11 +2,9 @@ import React, { createContext, useContext, useEffect, useReducer, useState } fro
 import { CreateProduct, Product } from "../models/Product";
 import { ProductList } from "../models/ProductList";
 
-const url = "https://win22-webapi.azurewebsites.net/api/products/";
-
 export interface ProductContext {
-  products: ProductList, 
-  getProducts: () => Promise<Product[]>;
+  cachedProducts: ProductList, 
+  list: () => Promise<Product[]>;
   getProduct: (articleNumber: string) => Product | null;
   createProduct: (product: CreateProduct) => Promise<Product>;
   readProduct: (articleNumber: string) => Promise<Product>;
@@ -18,16 +16,13 @@ const Context = createContext<ProductContext | null>(null);
 
 export const useProducts = () => useContext(Context);
 
-export const getProduct = async (articleNumber:string) => {
-  let result = await fetch(url + articleNumber);
-  return await result.json();
-}
-
 export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   
-  //#region Normal products
+  const baseURL = "http://localhost:5000/api/products/";
 
-  const [products, setProducts] = useState<ProductList>(
+  //#region Cached products
+
+  const [cachedProducts, setCachedProducts] = useState<ProductList>(
     {
       all: [], 
       featured: [], 
@@ -39,39 +34,40 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
     });
     
     const getProduct = (articleNumber: string): Product | null =>
-      products.all.find(p => p.articleNumber === articleNumber || p.name.replaceAll(" ", "-").toLowerCase() === articleNumber) ?? null;
-    
-    const [, forceUpdate] = useReducer(x => x + 1, 0);
+      cachedProducts.all.find(p => p.articleNumber === articleNumber || p.name.replaceAll(" ", "-").toLowerCase() === articleNumber) ?? null;
     
     useEffect(() => {
       
-      const fetchAllProducts = async () => {
-        
-        // let result = await fetch(url);
-        // let json = await result.json();
-        
-        // setProducts({...products, 
-        //   all: json, 
-        //   featured: json.slice(0, 8), 
-        //   sale1: json.slice(0, 4), 
-        //   sale2: json.slice(0, 4), 
-        //   latest: json.slice(0, 3), 
-        //   bestSelling: json.slice(0, 3),
-        //   topReacted: json.slice(0, 3)
-        // });
-        
-      }
-      
-      fetchAllProducts();
-      forceUpdate();
-      
-    }, [setProducts, products]);
+        const products = list().then(products => {
+          setCachedProducts({...products, 
+            all: products, 
+            featured: products.slice(0, 8), 
+            sale1: products.slice(0, 4), 
+            sale2: products.slice(0, 4), 
+            latest: products.slice(0, 3), 
+            bestSelling: products.slice(0, 3),
+            topReacted: products.slice(0, 3)
+          });
+        });
+
+      }, []);
     
   //#endregion
   //#region Crud
 
-  const baseURL = "http://localhost:5000/api/products/";
+  const list = async () => {
+    
+    let result = await fetch(baseURL, {
+      method: "get",
+      headers: {
+        "Content-Type": "application/json"
+      },
+    });
 
+    return await result.json();
+
+  }
+  
   const createProduct = async (product: CreateProduct) => {
     
     let result = await fetch(baseURL, {
@@ -134,23 +130,10 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
 
   }
 
-  const getProducts = async () => {
-    
-    let result = await fetch(baseURL, {
-      method: "get",
-      headers: {
-        "Content-Type": "application/json"
-      },
-    });
-
-    return await result.json();
-
-  }
-  
   //#endregion
     
   return (
-    <Context.Provider value={{ products, getProduct, getProducts, createProduct, readProduct, updateProduct, deleteProduct }}>
+    <Context.Provider value={{ cachedProducts, getProduct, list, createProduct, readProduct, updateProduct, deleteProduct }}>
         {children}
     </Context.Provider>
   );

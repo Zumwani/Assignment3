@@ -150,7 +150,9 @@ select {
 table:not(.no-border) {
 
     th, td {
-        border: lightgray 1px solid;
+        &:not(.no-border) {
+            border: lightgray 1px solid;
+        }
     }
 
     Button {
@@ -158,7 +160,7 @@ table:not(.no-border) {
         transition: all 0.1s;
     }
 
-    tr:hover > Button {
+    tr:hover Button {
         opacity: 1;
     }
 
@@ -268,29 +270,16 @@ table:not(.no-border) {
     color: white !important;
     padding: 22px;
     margin-bottom: 22px;
+    background-color: transparent;
+    height: 0;    
+    transition: all 0.5s ease;
 
-    &.success { background-color: #26c281; animation-name: fadeInOpacity;}
-    &.error { background-color: red; animation-name: fadeInOpacity;}
+    &.success { background-color: #26c281; height: unset; }
+    &.error { background-color: red; height: unset; }
+    &.busy { background-color: transparent; height: unset; }
 
     h5 {
         margin-bottom: 12px;
     }
 
-    opacity: 0;
-	animation-iteration-count: 1;
-	animation-timing-function: ease-in;
-	animation-duration: 2s;
-
 }
-@keyframes fadeInOpacity {
-	0% {
-		opacity: 0;
-	}
-	100% {
-		opacity: 1;
-	}
-}
-    @keyframes showAnimation {
-          from { opacity: 0; }
-          to { opacity: 1; }
-    }

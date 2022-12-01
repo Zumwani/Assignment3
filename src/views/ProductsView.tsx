@@ -13,12 +13,12 @@ const ProductsView: React.FC = () => {
     if (productContext == null)
         return <></>;
     
-    const { products } = productContext;
+    const { cachedProducts } = productContext;
 
     return (
         <>
             <BreadcrumbSection currentPage={<NavLink to="/products/">Products</NavLink>} page2={id}/>
-            <ProductGrid products={getProducts(id ?? null, products)} innerClassName="justify-content-center" className="main-layout2"/>
+            <ProductGrid products={getProducts(id ?? null, cachedProducts)} innerClassName="justify-content-center" className="main-layout2"/>
         </>
     )
 

@@ -47,9 +47,9 @@ const TabControl: React.FC<Params> = ({ children, className, tab, onTabChanged }
         setIsSettingTab(true);
         if (setExternalSelectedTab)
             setExternalSelectedTab(selectedTab);
-        
-            if (onTabChanged)
-                onTabChanged(selectedTab);
+    
+        if (onTabChanged)
+            onTabChanged(selectedTab);
 
     }, [selectedTab]);
     

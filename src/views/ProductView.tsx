@@ -22,7 +22,7 @@ const ProductView: React.FC = () => {
     if (productContext == null || shoppingCartContext == null)
         return <></>;
 
-    const { getProduct, products } = productContext;
+    const { getProduct, cachedProducts } = productContext;
     const { incrementQuantity, decrementQuantity, getItemQuantity, removeItem } = shoppingCartContext;
     
     
@@ -30,7 +30,7 @@ const ProductView: React.FC = () => {
     if (product == null)
         return <></>;
 
-    const relatedProducts = products.all.slice(0, 4);
+    const relatedProducts = cachedProducts.all.slice(0, 4);
     
     return (
         product == null

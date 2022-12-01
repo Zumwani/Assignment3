@@ -17,13 +17,13 @@ const CategoriesView: React.FC = () => {
     if (productContext == null)
         return <></>;
 
-    const { products } = productContext;
+    const { cachedProducts } = productContext;
 
-    const categories = new Set(products.all.map(p => p.category));
-    const items = Array.from(categories).map(c => products.all.find(p => p.category === c) ?? null).filter(notEmpty);
+    const categories = new Set(cachedProducts.all.map(p => p.category));
+    const items = Array.from(categories).map(c => cachedProducts.all.find(p => p.category === c) ?? null).filter(notEmpty);
 
     const getImage = (category:string) =>
-        products.all.find(p => p.category === category)?.imageName ?? null;
+    cachedProducts.all.find(p => p.category === category)?.imageName ?? null;
 
     const createCategoryButton = (category:string) =>
         <NavLink key={category} to={ "/products/" + category.replaceAll(" ", "-").toLowerCase() }><CategoryButton categoryName={category} image={getImage(category) ?? ""}/></NavLink>;

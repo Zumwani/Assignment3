@@ -8,12 +8,12 @@ const FeaturedProductsSection: React.FC = () => {
     if (productContext == null)
         return <></>;
 
-    const { products } = productContext;
+    const { cachedProducts } = productContext;
 
     return (
         <section className='mx-auto w-fit-content'>
             <h5 className='mb-5 mt-5'>Featured products</h5>
-            <ProductGrid products={products.featured} columns={10} innerClassName='justify-content-evenly'/>
+            <ProductGrid products={cachedProducts.featured} columns={10} innerClassName='justify-content-evenly'/>
         </section>
     )
 

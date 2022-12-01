@@ -1,4 +1,3 @@
-import { stat } from 'fs';
 import React, { useEffect, useState } from 'react'
 import Input from '../components/Contact/Input'
 import TextArea from '../components/Contact/TextArea'
@@ -12,9 +11,10 @@ interface TabParam {
     context: ProductContext;
 
     setIsBusy: () => void;
-    setError:(message:string) => void;
-    setSuccess: (message:string) => void;
+    setError: (error: any) => void;
+    setSuccess: (message: string) => void;
 
+    getStatus: () => Status;
     selectedTab: string;
     setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
 
@@ -45,57 +45,30 @@ const CrudTest: React.FC = () => {
     const [readForm, setReadForm] = useState<string>("");
     const [updateForm, setUpdateForm] = useState<Product>({ articleNumber: "", name: "", imageName: "", rating: 0, category: "", description: "", price: 0 });
     const [deleteForm, setDeleteForm] = useState<string>("");
-
-    const setIsBusy = () => setStatus({ isBusy: true, isError: false, message: "" });
-    const setSuccess = (message:string) => setStatus({ isBusy: false, isError: false, message: message });
-
+ 
+    const getStatus = () => status;
+    const setIsBusy = () => setStatus({ isBusy: true, isError: false, message: "Sending request..." });
+    const setSuccess = (message: string) => setStatus({ isBusy: false, isError: false, message: message });
+    
     const setError = (error: any) => {
         if (typeof(error) === "string")
             setStatus({ isBusy: false, isError: true, message: error });
         else if (error instanceof Error)
             setStatus({ isBusy: false, isError: true, message: error.message });
     };
-
+    
     if (context == null)
         return <></>
-
-    const param: TabParam = { context, setIsBusy, setError, setSuccess, selectedTab, setSelectedTab, readForm, setReadForm, updateForm, setUpdateForm, deleteForm, setDeleteForm }
-
+    
+    const param: TabParam = { context, getStatus, setIsBusy, setError, setSuccess, selectedTab, setSelectedTab, readForm, setReadForm, updateForm, setUpdateForm, deleteForm, setDeleteForm }
+    
     const onTabChanged = (tab: string) =>
         setStatus({ isBusy: false, isError: false, message: "" });
 
     return (
         <div className='main-layout'>
-            
-            {
 
-                status?.isBusy ?
-                <p>Sending request...</p>
-                : null
-
-            }
-
-            {
-
-                status?.message && status.isError ?
-                (<div className='status error'>
-                    <h5>Error:</h5>
-                    <p>{status.message}</p>
-                </div>)
-                : null
-
-            }
-            
-            {
-
-                status?.message && !status.isError ?
-                (<div className='status success'>
-                    <h5>Success:</h5>
-                    <p>{status.message}</p>
-                </div>)
-                : null
-
-            }
+            {Status(param)}
 
             <TabControl tab={[selectedTab, setSelectedTab]} onTabChanged={onTabChanged}>
                 {ListTab(param)}
@@ -110,19 +83,30 @@ const CrudTest: React.FC = () => {
 
 }
 
+const Status = (param: TabParam) => {
+return (
+    <div className={'status' + (param.getStatus().message ? (param.getStatus().isError ? " error" : "") + (!param.getStatus().isError ? " success" : "") : "")}>
+        {param.getStatus().isError
+            ? <h5>Error:</h5>
+            : null}
+        <p>{param.getStatus().message}</p>
+    </div>
+);
+}
+
 const ListTab = (param: TabParam) => {
 
     const { setIsBusy, setError, setSuccess, selectedTab, setSelectedTab, context, setReadForm, setUpdateForm, setDeleteForm } = param;
 
     const [products, setProducts] = useState<Product[]>();
 
-    const refresh = () => {
+    const refresh = (force?: boolean) => {
 
-        if (selectedTab !== "list")
+        if (selectedTab !== "list" && !force)
             return;
-
+            
         setIsBusy();
-        context.getProducts().
+        context.list().
         then(products => {
             setSuccess(products.length + " products retrieved.");
             setProducts(products);
@@ -133,13 +117,21 @@ const ListTab = (param: TabParam) => {
 
     };
 
+    const reset = async () => {
+            
+        fetch("http://localhost:5000/api/products/reset", { method: "post" }).
+        then(() => refresh(true)).
+        catch(setError);
+        
+    }
+
     useEffect(refresh, [selectedTab]);
 
     const onReadClick = (product: Product) => {
         setReadForm(product.articleNumber);
         setSelectedTab("read");
     }
-
+    
     const onUpdateClick = (product: Product) => {
         setUpdateForm(product);
         setSelectedTab("update");
@@ -152,7 +144,10 @@ const ListTab = (param: TabParam) => {
 
     return (
         <Tab id='list' header='List'>
-            <button onClick={refresh} className="align-self-end my-5">Refresh</button>
+            <div>
+                <button onClick={() => refresh()} className="align-self-end my-5">Refresh</button>
+                <button onClick={reset} className="align-self-end my-5 ms-5">Reset</button>
+            </div>
             <table cellPadding={20}>
                 <tr>
                     <th>Article Number</th>
@@ -161,9 +156,10 @@ const ListTab = (param: TabParam) => {
                     <th>Price</th>
                     <th>Rating</th>
                     <th>Description</th>
+                    <th>Image:</th>
                 </tr>
                 {
-                    products?.length ?? 0 > 0
+                    products != undefined && (products?.length ?? 0 > 0)
                     ? products?.map(p =>
                         <tr key={p.articleNumber}>
                             <td>{p.articleNumber}</td>
@@ -172,9 +168,16 @@ const ListTab = (param: TabParam) => {
                             <td>{p.price}</td>
                             <td>{p.rating}</td>
                             <td>{p.description}</td>
-                            <button className='fas fa-download p-2 ms-4 mt-3' onClick={() => onReadClick(p)}></button>
-                            <button className='fas fa-edit p-2 mt-3 mx-4' onClick={() => onUpdateClick(p)}></button>
-                            <button className='fas fa-trash p-2 bg-red c-white' onClick={() => onDeleteClick(p)}></button>
+                            <td><img src={p.imageName} title={p.imageName} className="w-64"/></td>
+                            <td className='no-border p-0'>
+                                <button className='fas fa-download p-2 ms-4 my-auto' data-toggle="tooltip" title="Read..." onClick={() => onReadClick(p)}></button>
+                            </td>
+                            <td className='no-border p-0'>
+                                <button className='fas fa-edit p-2 my-auto mx-4' data-toggle="tooltip" title="Update..." onClick={() => onUpdateClick(p)}></button>
+                            </td>
+                            <td className='no-border p-0'>
+                                <button className='fas fa-trash p-2 my-auto bg-red c-white' data-toggle="tooltip" title="Delete..." onClick={() => onDeleteClick(p)}></button>
+                            </td>
                         </tr> 
                     )
                     : null
