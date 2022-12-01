@@ -9,6 +9,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 const usersController = require("./controllers/productController");
-app.use("/api/products", usersController);
+app.use("/api", usersController);
 
 app.listen(port, () => console.log("Server is running (http://localhost:" + port + ")"));

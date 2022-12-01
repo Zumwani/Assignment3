@@ -150,12 +150,13 @@ const ListTab = (param: TabParam) => {
             </div>
             <table cellPadding={20}>
                 <tr>
-                    <th>Article Number</th>
-                    <th>Name</th>
-                    <th>category</th>
-                    <th>Price</th>
-                    <th>Rating</th>
-                    <th>Description</th>
+                    <th>Article Number:</th>
+                    <th>Name:</th>
+                    <th>Category:</th>
+                    <th>Tags:</th>
+                    <th>Price:</th>
+                    <th>Rating:</th>
+                    <th>Description:</th>
                     <th>Image:</th>
                 </tr>
                 {
@@ -165,6 +166,7 @@ const ListTab = (param: TabParam) => {
                             <td>{p.articleNumber}</td>
                             <td>{p.name}</td>
                             <td>{p.category}</td>
+                            <td>{p.tags}</td>
                             <td>{p.price}</td>
                             <td>{p.rating}</td>
                             <td>{p.description}</td>
@@ -230,6 +232,10 @@ const CreateTab = (param: TabParam) => {
                         <tr>
                             <td>Category:</td>
                             <td><Input id="category" placeholder='Category' value={product?.category} onChange={onChange} onKeyUp={() => {}}/></td>
+                        </tr>
+                        <tr>
+                            <td>Tags:</td>
+                            <td><Input id="tags" placeholder='Tags' value={product?.tags ?? ""} onChange={onChange} onKeyUp={() => {}}/></td>
                         </tr>
                         <tr>
                             <td>Price:</td>
@@ -318,6 +324,10 @@ const ReadTab = (param: TabParam) => {
                                     <td>{product?.category}</td>
                                 </tr>
                                 <tr>
+                                    <td>Tags:</td>
+                                    <td>{product?.tags}</td>
+                                </tr>
+                                <tr>
                                     <td>Price:</td>
                                     <td>{product?.price?.toString()}</td>
                                 </tr>
@@ -343,12 +353,12 @@ const UpdateTab = (param: TabParam) => {
 
     const { setIsBusy, setError, setSuccess, updateForm, setUpdateForm, setSelectedTab, context } = param;
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let {id, value} = e.target;
         setUpdateForm({...updateForm, [id]: value});
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const onSubmit = (e: React.FormEvent) => {
 
         e.preventDefault();
 
@@ -371,36 +381,40 @@ const UpdateTab = (param: TabParam) => {
                     <table cellPadding={10} className="no-border mt-5 mx-auto">
                         <tr>
                             <td>Article Number:</td>
-                            <td><Input id="articleNumber" placeholder='Article Number' value={updateForm?.articleNumber} onChange={handleChange} onKeyUp={() => {}}/></td>
+                            <td><Input id="articleNumber" placeholder='Article Number' value={updateForm?.articleNumber} onChange={onChange} onKeyUp={() => {}}/></td>
                         </tr>
                         <tr>
                             <td>Name:</td>
-                            <td><Input id="name" placeholder='Name' value={updateForm?.name} onChange={handleChange} onKeyUp={() => {}}/></td>
+                            <td><Input id="name" placeholder='Name' value={updateForm?.name} onChange={onChange} onKeyUp={() => {}}/></td>
                         </tr>
                         <tr>
                             <td>Image:</td>
-                            <td><Input id="imageName" placeholder='Image' value={updateForm?.imageName} onChange={handleChange} onKeyUp={() => {}}/></td>
+                            <td><Input id="imageName" placeholder='Image' value={updateForm?.imageName} onChange={onChange} onKeyUp={() => {}}/></td>
                         </tr>
                         <tr>
                             <td>Category:</td>
-                            <td><Input id="category" placeholder='Category' value={updateForm?.category} onChange={handleChange} onKeyUp={() => {}}/></td>
+                            <td><Input id="category" placeholder='Category' value={updateForm?.category} onChange={onChange} onKeyUp={() => {}}/></td>
+                        </tr>
+                        <tr>
+                            <td>Tags:</td>
+                            <td><Input id="tag" placeholder='Tag' value={updateForm?.tags ?? ""} onChange={onChange} onKeyUp={() => {}}/></td>
                         </tr>
                         <tr>
                             <td>Price:</td>
-                            <td><Input id="price"  type='number' value={updateForm?.price.toString()} onChange={handleChange} onKeyUp={() => {}}/></td>
+                            <td><Input id="price"  type='number' value={updateForm?.price.toString()} onChange={onChange} onKeyUp={() => {}}/></td>
                         </tr>
                         <tr>
                             <td>Rating:</td>
-                            <td><Input id="rating" type='number' value={updateForm?.rating.toString()} onChange={handleChange} onKeyUp={() => {}}/></td>
+                            <td><Input id="rating" type='number' value={updateForm?.rating.toString()} onChange={onChange} onKeyUp={() => {}}/></td>
                         </tr>
                         <tr>
                             <td>Description:</td>
-                            <td><TextArea id="description" placeholder='Description' value={updateForm?.description ?? ""} onChange={handleChange} onKeyUp={() => {}}/></td>
+                            <td><TextArea id="description" placeholder='Description' value={updateForm?.description ?? ""} onChange={onChange} onKeyUp={() => {}}/></td>
                         </tr>
                     </table>
                 </form>
 
-                <button onClick={handleSubmit} className="mt-4">Put</button>
+                <button onClick={onSubmit} className="mt-4">Put</button>
 
             </div>
         </Tab>

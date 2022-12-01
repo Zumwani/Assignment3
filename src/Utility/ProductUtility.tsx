@@ -18,59 +18,85 @@ export const useProducts = () => useContext(Context);
 
 export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   
-  const baseURL = "http://localhost:5000/api/products/";
+  const baseURL = "http://localhost:5000/api/";
+  const productURL = baseURL + "products/";
+  const tagsURL = baseURL + "tags/";
 
   //#region Cached products
 
   const [cachedProducts, setCachedProducts] = useState<ProductList>(
-    {
-      all: [], 
-      featured: [], 
-      sale1: [], 
-      sale2: [], 
-      latest: [], 
-      bestSelling: [], 
-      topReacted: [] 
-    });
+  {
+    all: [], 
+    featured: [], 
+    sale1: [], 
+    sale2: [], 
+    latest: [], 
+    bestSelling: [], 
+    topReacted: [] 
+  });
+  
+  const getProduct = (articleNumber: string): Product | null =>
+    cachedProducts.all.find(p => p.articleNumber === articleNumber || p.name.replaceAll(" ", "-").toLowerCase() === articleNumber) ?? null;
+  
+  useEffect(() => {
     
-    const getProduct = (articleNumber: string): Product | null =>
-      cachedProducts.all.find(p => p.articleNumber === articleNumber || p.name.replaceAll(" ", "-").toLowerCase() === articleNumber) ?? null;
-    
-    useEffect(() => {
-      
-        const products = list().then(products => {
-          setCachedProducts({...products, 
-            all: products, 
-            featured: products.slice(0, 8), 
-            sale1: products.slice(0, 4), 
-            sale2: products.slice(0, 4), 
-            latest: products.slice(0, 3), 
-            bestSelling: products.slice(0, 3),
-            topReacted: products.slice(0, 3)
-          });
-        });
+    const getProducts = async () => {
 
-      }, []);
+      const allProducts = await list(); 
+      const featured = await listTag("featured");
+      const flashSale = await listTag("flash-sale");
+      const latest = await listTag("latest");
+      const bestSelling = await listTag("best-selling");
+      const topReacted = await listTag("top-reacted");
+
+      setCachedProducts({
+        all: allProducts,
+        featured: featured.slice(0, 8),
+        sale1: flashSale.slice(0, 3),
+        sale2: flashSale.slice(3, 8),
+        latest: latest.slice(0, 8),
+        bestSelling: bestSelling.slice(0, 8),
+        topReacted: topReacted.slice(0, 8),
+      });
+
+    }
+
+    getProducts();
+
+  }, []);
     
   //#endregion
   //#region Crud
 
   const list = async () => {
     
-    let result = await fetch(baseURL, {
+    let result = await fetch(productURL, {
       method: "get",
       headers: {
         "Content-Type": "application/json"
       },
     });
 
-    return await result.json();
+    return (await result.json() as Product[]) ?? [];
+
+  }
+  
+  const listTag = async (tag: string) => {
+    
+    let result = await fetch(tagsURL + tag, {
+      method: "get",
+      headers: {
+        "Content-Type": "application/json"
+      },
+    });
+
+    return (await result.json() as Product[]) ?? [];
 
   }
   
   const createProduct = async (product: CreateProduct) => {
     
-    let result = await fetch(baseURL, {
+    let result = await fetch(productURL, {
       method: "post",
       headers:{
         "Content-Type": "application/json"
@@ -83,7 +109,6 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
     else
       throw new Error("The product could not be created.");
 
-
   }
   
   const readProduct = async (articleNumber: string) => {
@@ -91,7 +116,7 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
     if (!articleNumber)
       throw new Error("Article number cannot be null.");
 
-    let result = await fetch(baseURL + articleNumber, {
+    let result = await fetch(productURL + articleNumber, {
       method: "get"
     });
 
@@ -104,7 +129,7 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
   
   const updateProduct = async (product: Product) => {
 
-    let result = await fetch(baseURL + product.articleNumber, {
+    let result = await fetch(productURL + product.articleNumber, {
       method: "put",
       headers:{
         "Content-Type": "application/json"
@@ -121,7 +146,7 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
     
     const articleNumber = product as string ?? (product as Product)?.articleNumber;
 
-    let result = await fetch(baseURL + articleNumber, {
+    let result = await fetch(productURL + articleNumber, {
       method: "delete"
     });
     
