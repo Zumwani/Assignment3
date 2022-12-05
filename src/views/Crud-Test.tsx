@@ -68,7 +68,7 @@ const CrudTest: React.FC = () => {
     return (
         <div className='main-layout'>
 
-            {Status(param)}
+            {StatusMessage(param)}
 
             <TabControl tab={[selectedTab, setSelectedTab]} onTabChanged={onTabChanged}>
                 {ListTab(param)}
@@ -83,8 +83,7 @@ const CrudTest: React.FC = () => {
 
 }
 
-const Status = (param: TabParam) => {
-return (
+const StatusMessage = (param: TabParam) => (
     <div className={'status' + (param.getStatus().message ? (param.getStatus().isError ? " error" : "") + (!param.getStatus().isError ? " success" : "") : "")}>
         {param.getStatus().isError
             ? <h5>Error:</h5>
@@ -92,7 +91,6 @@ return (
         <p>{param.getStatus().message}</p>
     </div>
 );
-}
 
 const ListTab = (param: TabParam) => {
 
@@ -106,8 +104,8 @@ const ListTab = (param: TabParam) => {
             return;
             
         setIsBusy();
-        context.list().
-        then(products => {
+        context.list()
+        .then(products => {
             setSuccess(products.length + " products retrieved.");
             setProducts(products);
         }).catch((e) => {
@@ -119,9 +117,9 @@ const ListTab = (param: TabParam) => {
 
     const reset = async () => {
             
-        fetch("http://localhost:5000/api/products/reset", { method: "post" }).
-        then(() => refresh(true)).
-        catch(setError);
+        fetch("http://localhost:5000/api/products/reset", { method: "post" })
+        .then(() => refresh(true))
+        .catch(setError);
         
     }
 
@@ -149,28 +147,31 @@ const ListTab = (param: TabParam) => {
                 <button onClick={reset} className="align-self-end my-5 ms-5">Reset</button>
             </div>
             <table cellPadding={20}>
-                <tr>
-                    <th>Article Number:</th>
-                    <th>Name:</th>
-                    <th>Category:</th>
-                    <th>Tags:</th>
-                    <th>Price:</th>
-                    <th>Rating:</th>
-                    <th>Description:</th>
-                    <th>Image:</th>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>Article Number:</th>
+                        <th>Name:</th>
+                        <th>Category:</th>
+                        <th>Tag:</th>
+                        <th>Price:</th>
+                        <th>Rating:</th>
+                        <th>Description:</th>
+                        <th>Image:</th>
+                    </tr>
+                </thead>
+                <tbody>
                 {
-                    products != undefined && (products?.length ?? 0 > 0)
+                    products !== undefined && (products?.length ?? 0 > 0)
                     ? products?.map(p =>
                         <tr key={p.articleNumber}>
                             <td>{p.articleNumber}</td>
                             <td>{p.name}</td>
                             <td>{p.category}</td>
-                            <td>{p.tags}</td>
+                            <td>{p.tag}</td>
                             <td>{p.price}</td>
                             <td>{p.rating}</td>
                             <td>{p.description}</td>
-                            <td><img src={p.imageName} title={p.imageName} className="w-64"/></td>
+                            <td><img src={p.imageName} title={p.imageName} className="w-64" alt=''/></td>
                             <td className='no-border p-0'>
                                 <button className='fas fa-download p-2 ms-4 my-auto' data-toggle="tooltip" title="Read..." onClick={() => onReadClick(p)}></button>
                             </td>
@@ -184,6 +185,7 @@ const ListTab = (param: TabParam) => {
                     )
                     : null
                 }
+                </tbody>
             </table>
         </Tab>
     );
@@ -206,9 +208,9 @@ const CreateTab = (param: TabParam) => {
     
         setIsBusy();
 
-        context.createProduct(product).
-        then((product) => setSuccess("Product '" + product.articleNumber + "' created.")).
-        catch(setError);
+        context.createProduct(product)
+        .then((product) => setSuccess("Product '" + product.articleNumber + "' created."))
+        .catch(setError);
 
         //Reset to default values
         setProduct(DefaultCreateProduct());
@@ -221,34 +223,36 @@ const CreateTab = (param: TabParam) => {
 
                 <form>
                     <table cellPadding={10} className="no-border mt-5 mx-auto">
-                        <tr>
-                            <td>Name:</td>
-                            <td><Input id="name" placeholder='Name' value={product?.name} onChange={onChange} onKeyUp={() => {}}/></td>
-                        </tr>
-                        <tr>
-                            <td>Image:</td>
-                            <td><Input id="imageName" placeholder='Image' value={product?.imageName} onChange={onChange} onKeyUp={() => {}}/></td>
-                        </tr>
-                        <tr>
-                            <td>Category:</td>
-                            <td><Input id="category" placeholder='Category' value={product?.category} onChange={onChange} onKeyUp={() => {}}/></td>
-                        </tr>
-                        <tr>
-                            <td>Tags:</td>
-                            <td><Input id="tags" placeholder='Tags' value={product?.tags ?? ""} onChange={onChange} onKeyUp={() => {}}/></td>
-                        </tr>
-                        <tr>
-                            <td>Price:</td>
-                            <td><Input id="price"  type='number' value={product?.price.toString()} onChange={onChange} onKeyUp={() => {}}/></td>
-                        </tr>
-                        <tr>
-                            <td>Rating:</td>
-                            <td><Input id="rating" type='number' value={product?.rating.toString()} onChange={onChange} onKeyUp={() => {}}/></td>
-                        </tr>
-                        <tr>
-                            <td>Description:</td>
-                            <td><TextArea id="description" placeholder='Description' value={product?.description ?? ""} onChange={onChange} onKeyUp={() => {}}/></td>
-                        </tr>
+                        <tbody>
+                            <tr>
+                                <td>Name:</td>
+                                <td><Input id="name" placeholder='Name' value={product?.name} onChange={onChange} onKeyUp={() => {}}/></td>
+                            </tr>
+                            <tr>
+                                <td>Image:</td>
+                                <td><Input id="imageName" placeholder='Image' value={product?.imageName} onChange={onChange} onKeyUp={() => {}}/></td>
+                            </tr>
+                            <tr>
+                                <td>Category:</td>
+                                <td><Input id="category" placeholder='Category' value={product?.category} onChange={onChange} onKeyUp={() => {}}/></td>
+                            </tr>
+                            <tr>
+                                <td>Tag:</td>
+                                <td><Input id="tags" placeholder='Tags' value={product?.tag ?? ""} onChange={onChange} onKeyUp={() => {}}/></td>
+                            </tr>
+                            <tr>
+                                <td>Price:</td>
+                                <td><Input id="price"  type='number' value={product?.price.toString()} onChange={onChange} onKeyUp={() => {}}/></td>
+                            </tr>
+                            <tr>
+                                <td>Rating:</td>
+                                <td><Input id="rating" type='number' value={product?.rating.toString()} onChange={onChange} onKeyUp={() => {}}/></td>
+                            </tr>
+                            <tr>
+                                <td>Description:</td>
+                                <td><TextArea id="description" placeholder='Description' value={product?.description ?? ""} onChange={onChange} onKeyUp={() => {}}/></td>
+                            </tr>
+                        </tbody>
                     </table>
                 </form>
 
@@ -280,12 +284,12 @@ const ReadTab = (param: TabParam) => {
         e.preventDefault();
         
         setIsBusy();
-        context.readProduct(readForm).
-        then((product) => {
+        context.readProduct(readForm)
+        .then((product) => {
             setProduct(product);
             setSuccess("Retrieved product '" + product.articleNumber + "'.");
-        }).
-        catch(e => { setError(e); setProduct(null); });
+        })
+        .catch(e => { setError(e); setProduct(null); });
         
     };
     
@@ -295,18 +299,21 @@ const ReadTab = (param: TabParam) => {
 
                 <form>
                     <table cellPadding={10} className="no-border mt-5 mx-auto">
-                        <tr>
-                            <td>Article Number:</td>
-                            <td><Input id="articleNumber" placeholder='Article Number' value={readForm} onChange={handleChange} onKeyUp={() => {}}/></td>
-                        </tr>
+                        <tbody>
+                            <tr>
+                                <td>Article Number:</td>
+                                <td><Input id="articleNumber" placeholder='Article Number' value={readForm} onChange={handleChange} onKeyUp={() => {}}/></td>
+                            </tr>
+                        </tbody>
                     </table>
                 </form>
 
                 <button onClick={onSubmit} className="mt-4">Read</button>
 
                 {
-                    product == undefined ? null : (
+                    product === undefined ? null : (
                         <table cellPadding={10} className="mt-5 mx-auto">
+                            <tbody>
                                 <tr>
                                     <td>Article Number:</td>
                                     <td>{product?.articleNumber}</td>
@@ -324,8 +331,8 @@ const ReadTab = (param: TabParam) => {
                                     <td>{product?.category}</td>
                                 </tr>
                                 <tr>
-                                    <td>Tags:</td>
-                                    <td>{product?.tags}</td>
+                                    <td>Tag:</td>
+                                    <td>{product?.tag}</td>
                                 </tr>
                                 <tr>
                                     <td>Price:</td>
@@ -339,7 +346,8 @@ const ReadTab = (param: TabParam) => {
                                     <td>Description:</td>
                                     <td>{product?.description ?? ""}</td>
                                 </tr>
-                            </table>
+                            </tbody>
+                        </table>
                         )
                     }
 
@@ -363,13 +371,13 @@ const UpdateTab = (param: TabParam) => {
         e.preventDefault();
 
         setIsBusy();
-        context.updateProduct(updateForm).
-        then(() => {
+        context.updateProduct(updateForm)
+        .then(() => {
             setTimeout(() => setSelectedTab("list"), 1000);
             setUpdateForm({ articleNumber: "", name: "", imageName: "", rating: 0, category: "", description: "", price: 0 });
             return setSuccess("Product '" + updateForm.articleNumber + "' updated. Returning to list tab...");
-        }).
-        catch(setError);
+        })
+        .catch(setError);
 
     };
 
@@ -379,38 +387,40 @@ const UpdateTab = (param: TabParam) => {
 
                 <form>
                     <table cellPadding={10} className="no-border mt-5 mx-auto">
-                        <tr>
-                            <td>Article Number:</td>
-                            <td><Input id="articleNumber" placeholder='Article Number' value={updateForm?.articleNumber} onChange={onChange} onKeyUp={() => {}}/></td>
-                        </tr>
-                        <tr>
-                            <td>Name:</td>
-                            <td><Input id="name" placeholder='Name' value={updateForm?.name} onChange={onChange} onKeyUp={() => {}}/></td>
-                        </tr>
-                        <tr>
-                            <td>Image:</td>
-                            <td><Input id="imageName" placeholder='Image' value={updateForm?.imageName} onChange={onChange} onKeyUp={() => {}}/></td>
-                        </tr>
-                        <tr>
-                            <td>Category:</td>
-                            <td><Input id="category" placeholder='Category' value={updateForm?.category} onChange={onChange} onKeyUp={() => {}}/></td>
-                        </tr>
-                        <tr>
-                            <td>Tags:</td>
-                            <td><Input id="tag" placeholder='Tag' value={updateForm?.tags ?? ""} onChange={onChange} onKeyUp={() => {}}/></td>
-                        </tr>
-                        <tr>
-                            <td>Price:</td>
-                            <td><Input id="price"  type='number' value={updateForm?.price.toString()} onChange={onChange} onKeyUp={() => {}}/></td>
-                        </tr>
-                        <tr>
-                            <td>Rating:</td>
-                            <td><Input id="rating" type='number' value={updateForm?.rating.toString()} onChange={onChange} onKeyUp={() => {}}/></td>
-                        </tr>
-                        <tr>
-                            <td>Description:</td>
-                            <td><TextArea id="description" placeholder='Description' value={updateForm?.description ?? ""} onChange={onChange} onKeyUp={() => {}}/></td>
-                        </tr>
+                        <tbody>
+                            <tr>
+                                <td>Article Number:</td>
+                                <td><Input id="articleNumber" placeholder='Article Number' value={updateForm?.articleNumber} onChange={onChange} onKeyUp={() => {}}/></td>
+                            </tr>
+                            <tr>
+                                <td>Name:</td>
+                                <td><Input id="name" placeholder='Name' value={updateForm?.name} onChange={onChange} onKeyUp={() => {}}/></td>
+                            </tr>
+                            <tr>
+                                <td>Image:</td>
+                                <td><Input id="imageName" placeholder='Image' value={updateForm?.imageName} onChange={onChange} onKeyUp={() => {}}/></td>
+                            </tr>
+                            <tr>
+                                <td>Category:</td>
+                                <td><Input id="category" placeholder='Category' value={updateForm?.category} onChange={onChange} onKeyUp={() => {}}/></td>
+                            </tr>
+                            <tr>
+                                <td>Tags:</td>
+                                <td><Input id="tag" placeholder='Tag' value={updateForm?.tag ?? ""} onChange={onChange} onKeyUp={() => {}}/></td>
+                            </tr>
+                            <tr>
+                                <td>Price:</td>
+                                <td><Input id="price"  type='number' value={updateForm?.price.toString()} onChange={onChange} onKeyUp={() => {}}/></td>
+                            </tr>
+                            <tr>
+                                <td>Rating:</td>
+                                <td><Input id="rating" type='number' value={updateForm?.rating.toString()} onChange={onChange} onKeyUp={() => {}}/></td>
+                            </tr>
+                            <tr>
+                                <td>Description:</td>
+                                <td><TextArea id="description" placeholder='Description' value={updateForm?.description ?? ""} onChange={onChange} onKeyUp={() => {}}/></td>
+                            </tr>
+                        </tbody>
                     </table>
                 </form>
 
@@ -436,13 +446,13 @@ const DeleteTab = (param: TabParam) => {
         e.preventDefault();
 
         setIsBusy();
-        context.deleteProduct(deleteForm).
-        then(() => {
+        context.deleteProduct(deleteForm)
+        .then(() => {
             setDeleteForm("");
             setTimeout(() => setSelectedTab("list"), 1000);
             return setSuccess("Product '" + deleteForm + "' deleted. Returning to list tab...");
-        }).
-        catch(setError);
+        })
+        .catch(setError);
 
     };
     
@@ -452,10 +462,12 @@ const DeleteTab = (param: TabParam) => {
 
                 <form>
                     <table cellPadding={10} className="no-border mt-5 mx-auto">
-                        <tr>
-                            <td>Article Number:</td>
-                            <td><Input id="articleNumber" placeholder='Article Number' value={deleteForm ?? ""} onChange={handleChange} onKeyUp={() => {}}/></td>
-                        </tr>
+                        <tbody>
+                            <tr>
+                                <td>Article Number:</td>
+                                <td><Input id="articleNumber" placeholder='Article Number' value={deleteForm ?? ""} onChange={handleChange} onKeyUp={() => {}}/></td>
+                            </tr>
+                        </tbody>
                     </table>
                 </form>
 

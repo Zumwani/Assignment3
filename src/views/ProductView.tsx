@@ -109,12 +109,8 @@ const ProductView: React.FC = () => {
 
                 <TabControl>
                     <Tab id="tab-description" header="Description">
-                        <article className='tab-description active text-start ps-2'>
-                             <p className='mt-4'>Way extensive and dejection get delivered deficient sincerity gentleman age. Too end instrument possession contrasted motionless. Calling offence six joy feeling. Coming merits and was talent enough far. Sir joy northward sportsmen education. Discovery incommode earnestly no he commanded if. Put still any about manor heard.</p>
-                            <p className='mt-4'>* Village did removed enjoyed explain nor ham saw calling talking.</p>
-                             <p>* Securing as informed declared or margaret.</p>
-                            <p>* Joy horrible moreover man feelings own shy.</p>
-                             <p className='mt-4'>On even feet time have an no at. Relation so in confined smallest children unpacked delicate. Why sir end believe uncivil respect. Always get adieus nature day course for common. My little garret repair to desire he esteem. </p>
+                        <article className='tab-description active text-start py-2'>
+                            {product.description}
                          </article>
                      </Tab>
                      <Tab id="tab-additional" header="Additional">

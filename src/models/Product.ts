@@ -9,9 +9,9 @@ export interface CreateProduct {
     category: string;
     description?: string;
     price: number;
-    tags?: string|undefined;
+    tag?: string|undefined;
 }
 
-export const DefaultCreateProduct = () => {
-    return { name: "test", imageName: "test", rating: 4, category: "test", description: "test", price: 10, tags: "" };
+export const DefaultCreateProduct = (): CreateProduct => {
+    return { name: "test", imageName: "test", rating: 4, category: "test", description: "test", price: 10, tag: "" };
 }

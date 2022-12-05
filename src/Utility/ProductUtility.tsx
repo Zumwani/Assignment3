@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useReducer, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { CreateProduct, Product } from "../models/Product";
 import { ProductList } from "../models/ProductList";
 
@@ -20,7 +20,7 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
   
   const baseURL = "http://localhost:5000/api/";
   const productURL = baseURL + "products/";
-  const tagsURL = baseURL + "tags/";
+  const tagsURL = productURL + "tags/";
 
   //#region Cached products
 
@@ -104,7 +104,7 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
       body: JSON.stringify(product)
     });
 
-    if (result.status == 201)
+    if (result.status === 201)
       return await result.json() as Product;
     else
       throw new Error("The product could not be created.");
@@ -120,7 +120,7 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
       method: "get"
     });
 
-    if (result.status == 200)
+    if (result.status === 200)
       return await result.json() as Product;
     else
       throw new Error("The product '" + articleNumber + "' could not be found.");
