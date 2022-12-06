@@ -1,12 +1,11 @@
-const { randomUUID } = require("crypto");
 const express = require("express");
+const { authorize } = require("../middlewares/authorization");
 
 const controller = express.Router();
+const ProductModel = require("../models/Product");
 module.exports = controller;
 
-const ProductModel = require("../models/Product");
-
-//Unsecure
+//#region Unsecure
 
 const reassignIDToArticleNumber = (product) => ({
   articleNumber: product._id,
@@ -49,103 +48,94 @@ controller.route("/tags/:tag/:take").get(async (request, response) => {
   response.status(200).json(products.map(reassignIDToArticleNumber));
 });
 
-//Secure
+//#endregion
+//#region Secure
 
-
-
-
-
-
-
-
-
-
-
-
-//http://localhost/api/products
-// controller.route("/products").
-// get((_, response) => {
-//   response.status(200).json(products ?? []);
-// }).
-// post((request, response) => {
-
-//   const { name, imageName, rating, category, description, price, tags } = request.body;
-
-//   if (name == "" || imageName == "" || category == "" || description == ""  || price == "" || rating == "") {
-//     response.status(400).send(null);
-//     return;
-//   };
+controller.route("/").post(authorize, async (request, response) => {
   
-//   const product = {
-//     articleNumber: randomUUID(),
-//     name: name,
-//     imageName: imageName,
-//     rating: rating,
-//     category: category,
-//     description: description,
-//     price: price,
-//     tags: tags
-//   };
+  const { name, imageName, category, tag, price, rating, description } = request.body;
+
+  if (!name || !imageName || !category || !price || !rating || !description)
+    response.status(400).json({ text: "name, imageName, category, price, rating, description are required."});
+  else {
+    
+    if (await ProductModel.findOne({ name }))
+      response.status(409).json({ text: "A product with the specified name already exists."});
+    else {
+      
+      const product = await ProductModel.create({
+        name,
+        description,
+        price,
+        category,
+        tag,
+        imageName,
+        rating
+      });
+
+      if (product)
+        response.status(201).json({ text: "Product successfully created.", articleNumber: product._id});
+      else
+        response.status(400).json({ text: "Something went wrong." });
+
+    }
   
-//   products.push(product);
-//   saveProducts(products);
-//   response.status(201).json(product);
-//   console.log(201);
+  }
+
+});
+
+controller.route("/").put(authorize, async (request, response) => {
   
-// });
+  const { articleNumber, name, imageName, category, tag, price, rating, description } = request.body;
 
-// controller.param("id", (request, response, next, articleNumber) => {
-//   request.product = products.find(p => p.articleNumber == articleNumber);
-//   if (!request.product)
-//     response.status(404).send(null);
-//   else
-//     next();
-// });
+  if (!name || !imageName || !category || !price || !rating || !description)
+    response.status(400).json({ text: "name, imageName, category, price, rating, description are required."});
+  else {
+    
+    if (!articleNumber)
+      response.status(404);
+    else {
 
-// //http://localhost/api/products/:id
-// controller.route("/products/:id").
+      const product = await ProductModel.findByIdAndUpdate(articleNumber, {
+        name,
+        description,
+        price,
+        category,
+        tag,
+        imageName,
+        rating
+      });
 
-// get((request, response) => {
-//     response.status(200).json(request.product);
-// }).
+      console.log(product);
 
-// put((request, response) => {
+      if (product)
+        response.status(204).send(null);
+      else
+        response.status(400).json({ text: "Something went wrong." });
 
-//   const { name, imageName, rating, category, description, price, tags } = request.body;
+    }
 
-//   products.forEach(p => {
-//     if (p.articleNumber === request.product.articleNumber) {
-//       p.name = name ? name : p.name;
-//       p.imageName = imageName ? imageName : p.imageName;
-//       p.rating = rating ? rating : p.rating;
-//       p.category = category ? category : p.category;
-//       p.description = description ? description : p.description;
-//       p.price = price ? price : p.price;
-//       p.tags = tags ? tags : p.tags;
-//     }
-//   });
-//   saveProducts(products);
+  }
 
-//   response.status(200).json(request.user);
+});
 
-// }).
+controller.route("/:id").delete(authorize, async (request, response) => {
+  
+  const articleNumber = request.params.id;
 
-// delete((request, response) => {
-//   products = products.filter(p => p.articleNumber !== request.product.articleNumber);
-//   saveProducts(products);
-//   console.log(products.length);
-//   response.status(204).send(null);
-// });
+  if (!articleNumber)
+    response.status(404);
+  else {
 
-// controller.route("/tags/:tag").
-// get((request, response) => {
+    const result = await ProductModel.findByIdAndRemove(articleNumber);
+    const isSuccessful = result["_id"];
+    response.status(isSuccessful ? 204 : 404).send(null);
 
-//   const tag = request.params.tag;
+  }
 
-//   const items = products.filter(p => p.tags.split(";").includes(tag));
-//   response.status(200).json(items);
+});
 
-// });
+//#endregion
 
 // controller.route("/reset").post((request, response) => {
 // const description = `Way extensive and dejection get delivered deficient sincerity gentleman age. Too end instrument possession contrasted motionless. Calling offence six joy feeling. Coming merits and was talent enough far. Sir joy northward sportsmen education. Discovery incommode earnestly no he commanded if. Put still any about manor heard.

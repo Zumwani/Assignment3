@@ -209,7 +209,7 @@ const CreateTab = (param: TabParam) => {
         setIsBusy();
 
         context.createProduct(product)
-        .then((product) => setSuccess("Product '" + product.articleNumber + "' created."))
+        .then((id) => setSuccess("Product '" + id + "' created."))
         .catch(setError);
 
         //Reset to default values
@@ -238,7 +238,7 @@ const CreateTab = (param: TabParam) => {
                             </tr>
                             <tr>
                                 <td>Tag:</td>
-                                <td><Input id="tags" placeholder='Tags' value={product?.tag ?? ""} onChange={onChange} onKeyUp={() => {}}/></td>
+                                <td><Input id="tag" placeholder='Tags' value={product?.tag ?? ""} onChange={onChange} onKeyUp={() => {}}/></td>
                             </tr>
                             <tr>
                                 <td>Price:</td>

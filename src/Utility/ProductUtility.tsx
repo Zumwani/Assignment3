@@ -6,7 +6,7 @@ export interface ProductContext {
   cachedProducts: ProductList, 
   list: () => Promise<Product[]>;
   getProduct: (articleNumber: string) => Product | null;
-  createProduct: (product: CreateProduct) => Promise<Product>;
+  createProduct: (product: CreateProduct) => Promise<string>;
   readProduct: (articleNumber: string) => Promise<Product>;
   updateProduct: (product: Product) => Promise<void>;
   deleteProduct: (product: Product|string|null) => Promise<void>;
@@ -105,7 +105,7 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
     });
 
     if (result.status === 201)
-      return await result.json() as Product;
+      return (await result.json())["articleNumber"] as string;
     else
       throw new Error("The product could not be created.");
 
@@ -129,7 +129,7 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
   
   const updateProduct = async (product: Product) => {
 
-    let result = await fetch(productURL + product.articleNumber, {
+    let result = await fetch(productURL, {
       method: "put",
       headers:{
         "Content-Type": "application/json"
@@ -137,7 +137,7 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
       body: JSON.stringify(product)
     });
 
-    if (result.status !== 200)
+    if (result.status !== 204)
       throw new Error("Product '" + product.articleNumber + "' could not be updated.");
 
   }
@@ -145,7 +145,7 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
   const deleteProduct = async (product: Product|string|null) => {
     
     const articleNumber = product as string ?? (product as Product)?.articleNumber;
-
+    
     let result = await fetch(productURL + articleNumber, {
       method: "delete"
     });

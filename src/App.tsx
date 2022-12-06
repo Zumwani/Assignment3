@@ -15,6 +15,13 @@ import NotFoundView from './views/NotFound';
 import CrudTest from './views/Crud-Test';
 import './App.css';
 
+//TODO: Add login / register forms
+//TODO: Save access token in localstorage
+//TODO: Convert server into ts
+//TODO: Share interfaces / types between server and client
+//TODO: Headers for secured endpoints: 'authorization': 'Bearer ' + localStorage.getItem("accessToken")
+//TODO: Reimplement reset endpoint on server
+
 const App: React.FC = () =>
 (
   <BrowserRouter>

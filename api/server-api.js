@@ -13,6 +13,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.use("/api/products", require("./controllers/productController"));
+app.use("/api/auth", require("./controllers/authenticationController"));
 
 initMongoDB();
 app.listen(port, () => console.log("Server is running (http://localhost:" + port + ")"));
