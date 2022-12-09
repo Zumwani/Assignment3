@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom';
 import { useShoppingCart } from '../Utility/ShoppingCartUtility';
 import { useWishlist } from '../Utility/WishlistUtility';
 import IconButton from '../components/IconButton';
+import { useUser } from '../Utility/UserUtility';
+import UserPopup from '../views/UserPopup';
 
 const NavBar: React.FC = () => {
 
@@ -15,13 +17,20 @@ const NavBar: React.FC = () => {
   document.addEventListener('scroll', setTransparentWhenScrollbarIsAtTop);
   setTransparentWhenScrollbarIsAtTop();
 
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+
   const shoppingCartContext = useShoppingCart();
   const wishlistContext = useWishlist();
-  if (shoppingCartContext == null || wishlistContext == null)
+  const user = useUser();
+  if (shoppingCartContext == null || wishlistContext == null || user == null)
     return <></>;
 
   const { cartQuantity } = shoppingCartContext;
   const { wishlistQuanitity } = wishlistContext;
+
+  const onUserButtonClick = () => {
+    setIsUserMenuOpen(!isUserMenuOpen);
+  }
   
   return (
     <>
@@ -50,6 +59,11 @@ const NavBar: React.FC = () => {
               {/* The following buttons opens sidebar, first is large viewport, second is small */}
               <button className="button-icon sidebar d-none d-lg-inline fa fa-shopping-bag" data-badge={cartQuantity ?? 0} type="button" data-bs-toggle="offcanvas" data-bs-target="#shopping-cart" aria-controls="shopping-cart"></button>
               <button className="button-icon sidebar fa fa-bars d-inline d-lg-none" data-badge={cartQuantity ?? 0} type="button" data-bs-toggle="offcanvas" data-bs-target="#shopping-cart" aria-controls="shopping-cart"></button>
+
+              <div className=''>
+                <button className='button-icon fa fa-user' type="button" onClick={onUserButtonClick}></button>
+                <UserPopup isOpen={isUserMenuOpen}/>
+              </div>
 
           </div>
 

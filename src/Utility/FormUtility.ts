@@ -8,6 +8,7 @@ const patterns: Dictionary<RegExp | number> = {};
 patterns["name"] = 2;
 patterns["email"] = /.{1,}@.*\..{1,}/;
 patterns["comments"] = 5;
+patterns["password"] = 8;
 
 type SetForm = (form: ContactForm) => void; 
 type SetBool = (value: boolean) => void; 

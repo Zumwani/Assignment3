@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { CreateProduct, Product } from "../models/Product";
 import { ProductList } from "../models/ProductList";
+import { useUser } from "./UserUtility";
 
 export interface ProductContext {
   cachedProducts: ProductList, 
@@ -21,6 +22,8 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
   const baseURL = "http://localhost:5000/api/";
   const productURL = baseURL + "products/";
   const tagsURL = productURL + "tags/";
+
+  const user = useUser();
 
   //#region Cached products
 
@@ -99,7 +102,8 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
     let result = await fetch(productURL, {
       method: "post",
       headers:{
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "authorization": "Bearer " + user?.user?.token
       },
       body: JSON.stringify(product)
     });
@@ -132,7 +136,8 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
     let result = await fetch(productURL, {
       method: "put",
       headers:{
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "authorization": "Bearer " + user?.user?.token
       },
       body: JSON.stringify(product)
     });
@@ -147,7 +152,10 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
     const articleNumber = product as string ?? (product as Product)?.articleNumber;
     
     let result = await fetch(productURL + articleNumber, {
-      method: "delete"
+      method: "delete",
+      headers: {
+        "authorization": "Bearer " + user?.user?.token
+      }
     });
     
     if (result.status !== 204)

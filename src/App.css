@@ -1295,4 +1295,19 @@ button.action.white::after {
 #shopping-cart .nav p:after, #wishlist .nav p:after {
   top: 0;
   right: -16px;
+}
+
+#user-popup {
+  position: absolute;
+  opacity: 0;
+  border: black solid 1px;
+  border-radius: 4px;
+  padding: 4px;
+  right: 12px;
+  margin-top: 12px;
+  background-color: white;
+  transition: all 0.1s ease;
+}
+#user-popup.open {
+  opacity: 1;
 }/*# sourceMappingURL=App.css.map */

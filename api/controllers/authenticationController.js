@@ -10,12 +10,17 @@ const UserModel = require("../models/User");
 
 //Unsecured
 
+const emailPattern = /.{1,}@.*\..{1,}/;
 controller.route("/signup").post(async (request, response) => {
+    
+    const { email, password } = request.body;
 
-    const { firstName, lastName, email, password } = request.body;
-
-    if (!firstName || !lastName || !email || !password)
-        response.status(400).json({ text: "firstName, lastName, email, password are required."});
+    if (!email || !password)
+        response.status(400).json({ text: "Email and password are required."});
+    else if (!emailPattern.test(email))
+        response.status(400).json({ text: "Email is invalid." });
+    else if (password.length < 8 || password.length > 32)
+        response.status(400).json({ text: "Password must contain between 8-32 characters." });
     else {
      
         if (await UserModel.findOne({ email }))
@@ -26,8 +31,6 @@ controller.route("/signup").post(async (request, response) => {
             const hashedPassword = await bcrypt.hash(password, salt);
 
             const user = await UserModel.create({
-                firstName,
-                lastName,
                 email,
                 password: hashedPassword
             });

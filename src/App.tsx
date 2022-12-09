@@ -4,6 +4,7 @@ import { ProductProvider } from './Utility/ProductUtility';
 import { ShoppingCartProvider } from './Utility/ShoppingCartUtility';
 import { WishlistProvider } from './Utility/WishlistUtility';
 import { NavigationManager } from './Utility/NavigationUtility';
+import { UserProvider } from './Utility/UserUtility';
 import NavBar from './sections/NavBar';
 import Footer from './sections/Footer';
 import MainView from './views/Main';
@@ -15,37 +16,36 @@ import NotFoundView from './views/NotFound';
 import CrudTest from './views/Crud-Test';
 import './App.css';
 
-//TODO: Add login / register forms
-//TODO: Save access token in localstorage
 //TODO: Convert server into ts
 //TODO: Share interfaces / types between server and client
-//TODO: Headers for secured endpoints: 'authorization': 'Bearer ' + localStorage.getItem("accessToken")
 //TODO: Reimplement reset endpoint on server
 
 const App: React.FC = () =>
 (
   <BrowserRouter>
-    <ProductProvider>
-      <ShoppingCartProvider>
-        <WishlistProvider>
-            <NavigationManager>
-              <NavBar/>
-              <Routes>
-                  <Route path="/" element={<MainView/>}/>
-                  <Route path="/Assignment3" element={<MainView/>}/>
-                  <Route path='/product/:name' element={<ProductView/>}/>
-                  <Route path="/categories" element={<CategoriesView/>}/>
-                  <Route path='/products' element={<ProductsView/>}/>
-                  <Route path='/products/:id' element={<ProductsView/>}/>
-                  <Route path="/contact" element={<ContactView/>}/>
-                  <Route path='/crud-test' element={<CrudTest/>}/>
-                  <Route path="*" element={<NotFoundView/>}/>
-              </Routes>
-              <Footer/>
-          </NavigationManager>
-        </WishlistProvider>
-      </ShoppingCartProvider>
-    </ProductProvider>
+    <UserProvider>
+      <ProductProvider>
+        <ShoppingCartProvider>
+          <WishlistProvider>
+              <NavigationManager>
+                <NavBar/>
+                <Routes>
+                    <Route path="/" element={<MainView/>}/>
+                    <Route path="/Assignment3" element={<MainView/>}/>
+                    <Route path='/product/:name' element={<ProductView/>}/>
+                    <Route path="/categories" element={<CategoriesView/>}/>
+                    <Route path='/products' element={<ProductsView/>}/>
+                    <Route path='/products/:id' element={<ProductsView/>}/>
+                    <Route path="/contact" element={<ContactView/>}/>
+                    <Route path='/crud-test' element={<CrudTest/>}/>
+                    <Route path="*" element={<NotFoundView/>}/>
+                </Routes>
+                <Footer/>
+            </NavigationManager>
+          </WishlistProvider>
+        </ShoppingCartProvider>
+      </ProductProvider>
+    </UserProvider>
   </BrowserRouter>
 );
 

@@ -1,0 +1,17 @@
+#user-popup {
+
+    position: absolute;
+    opacity: 0;
+    border: black solid 1px;
+    border-radius: 4px;
+    padding: 4px;
+    right: 12px;
+    margin-top: 12px;
+    background-color: white;
+    transition: all 0.1s ease;
+
+    &.open {
+        opacity: 1;
+    }
+
+}
