@@ -19,6 +19,7 @@ import './App.css';
 //TODO: Convert server into ts
 //TODO: Share interfaces / types between server and client
 //TODO: Reimplement reset endpoint on server
+//TODO: Fix user popup not updating position on viewport change
 
 const App: React.FC = () =>
 (

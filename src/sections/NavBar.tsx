@@ -60,9 +60,9 @@ const NavBar: React.FC = () => {
               <button className="button-icon sidebar d-none d-lg-inline fa fa-shopping-bag" data-badge={cartQuantity ?? 0} type="button" data-bs-toggle="offcanvas" data-bs-target="#shopping-cart" aria-controls="shopping-cart"></button>
               <button className="button-icon sidebar fa fa-bars d-inline d-lg-none" data-badge={cartQuantity ?? 0} type="button" data-bs-toggle="offcanvas" data-bs-target="#shopping-cart" aria-controls="shopping-cart"></button>
 
-              <div className=''>
-                <button className='button-icon fa fa-user' type="button" onClick={onUserButtonClick}></button>
-                <UserPopup isOpen={isUserMenuOpen}/>
+              <div>
+                <button id='userPopupButton' className='button-icon fa fa-user' type="button" onClick={onUserButtonClick}></button>
+                <UserPopup isOpen={isUserMenuOpen} button={() => document.querySelector("#userPopupButton")}/>
               </div>
 
           </div>

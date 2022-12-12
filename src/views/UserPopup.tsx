@@ -8,9 +8,11 @@ import { useUser } from '../Utility/UserUtility';
 
 interface Params {
     isOpen: boolean;
+    didOpenThisFrame?: boolean;
+    button: () => Element|null;
 }
 
-const UserPopup: React.FC<Params> = ({ isOpen }) => {
+const UserPopup: React.FC<Params> = ({ isOpen, didOpenThisFrame, button }) => {
 
     const [loginForm, setLoginForm] = useState<CreateUser>({ email: "", password: "" });
     const [registerForm, setRegisterForm] = useState<CreateUser>({ email: "", password: "" });
@@ -20,6 +22,36 @@ const UserPopup: React.FC<Params> = ({ isOpen }) => {
     const user = useUser();
     if (user == null)
         return <></>
+
+    const setPosition = () => {
+
+        const placementTarget = button();
+        const popup = document.querySelector("#user-popup") as HTMLElement;
+        
+        if (!popup)
+            return;
+        
+        if (!placementTarget) {
+            popup.style.left = "unset";
+            popup.style.right = "12px";
+            return;
+        }
+        
+        const buttonLeft = placementTarget.getBoundingClientRect().left
+        const halfWidth = popup.getBoundingClientRect().width / 2;
+        
+        popup.style.left = (buttonLeft - halfWidth) + "px";
+        popup.style.right = "unset";
+        
+        if (popup.getBoundingClientRect().right > window.innerWidth) {
+            popup.style.left = "unset";
+            popup.style.right = "12px";
+        }
+        
+    }
+
+    if (isOpen)
+        setPosition();
 
     //#region Login
     
