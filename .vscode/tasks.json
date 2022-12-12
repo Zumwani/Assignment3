@@ -24,6 +24,9 @@
         "label": "npm start",
         "type": "shell",
         "command": "npm start",
+        "options": {
+          "cwd": "${workspaceFolder}/app"
+        },
         "runOptions": {
           "runOn": "folderOpen"
         }
