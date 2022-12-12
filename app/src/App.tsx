@@ -16,10 +16,9 @@ import NotFoundView from './views/NotFound';
 import CrudTest from './views/Crud-Test';
 import './App.css';
 
-//TODO: Convert server into ts
-//TODO: Share interfaces / types between server and client
 //TODO: Reimplement reset endpoint on server
 //TODO: Fix user popup not updating position on viewport change
+//TODO: Remove vendor from api, not necessary in this project
 
 const App: React.FC = () =>
 (
