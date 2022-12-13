@@ -8,8 +8,7 @@ const product = mongoose.Schema({
     price: { type: mongoose.Schema.Types.String, required: true },
     rating: { type: mongoose.Schema.Types.String },
     description: { type: mongoose.Schema.Types.String, required: true },
-    imageName: { type: mongoose.Schema.Types.String, required: true },
-    vendorId: { type: mongoose.Schema.Types.String, required: true }
+    imageName: { type: mongoose.Schema.Types.String, required: true }
 });
 
 module.exports = mongoose.model("products", product);

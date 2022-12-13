@@ -17,8 +17,8 @@ const WeirdAlignSections: React.FC = () => {
             <SaleButton className="grid-area" title='' image="model7"/>
             <SaleButton className="grid-area" title='' image="model8"/>
 
-            { cachedProducts.sale1.map(p => <ProductButton key={p.articleNumber} product={p}/>) }
-            { cachedProducts.sale2.map(p => <ProductButton key={p.articleNumber} product={p}/>) }
+            { cachedProducts.sale1.map(p => <ProductButton key={p._id} product={p}/>) }
+            { cachedProducts.sale2.map(p => <ProductButton key={p._id} product={p}/>) }
 
         </section>
     )

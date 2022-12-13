@@ -31,7 +31,7 @@ export const ShoppingCartProvider: React.FC<Param> = ({children}) => {
     );
 
     const getItemQuantity = (product: Product) =>
-        cartItems.find(item => item.articleNumber === product.articleNumber)?.quantity || 0;
+        cartItems.find(item => item._id === product._id)?.quantity || 0;
 
     const decrementQuantity = (item: CartItem|Product, by = 1) => incrementQuantity(item, -by);
     const incrementQuantity = (item: CartItem|Product, by = 1) => {
@@ -40,18 +40,18 @@ export const ShoppingCartProvider: React.FC<Param> = ({children}) => {
         if (product == null)
             return;
 
-        let { articleNumber } = product;
+        let { _id } = product;
 
         if (getItemQuantity(product) + by < 1)
             removeItem(product);
         else
             setCartItems(items => {
                 
-                if (items.find(item => item.articleNumber === articleNumber) == null)
-                    return [...items, { articleNumber, product, quantity: by }];
+                if (items.find(item => item._id === _id) == null)
+                    return [...items, { _id, product, quantity: by }];
                 else
                     return items.map(item => 
-                        item.articleNumber === articleNumber && item.quantity + by >= 1
+                        item._id === _id && item.quantity + by >= 1
                         ? {...item, quantity: item.quantity + by}
                         : item);
 
@@ -60,10 +60,10 @@ export const ShoppingCartProvider: React.FC<Param> = ({children}) => {
     }
 
     const removeItem = (product: Product|CartItem) =>
-        setCartItems(items => items.filter(item => item.articleNumber !== product.articleNumber));
+        setCartItems(items => items.filter(item => item._id !== product._id));
 
     const toCartItem = (product: Product) =>
-        ({ articleNumber: product.articleNumber, product: product, quantity: 1 });
+        ({ _id: product._id, product: product, quantity: 1 });
 
     return (
         <Context.Provider value={{ cartItems, cartQuantity, getItemQuantity, incrementQuantity, decrementQuantity, removeItem, toCartItem }}>

@@ -1,5 +1,5 @@
 export interface Product extends CreateProduct {
-    articleNumber: string,
+    _id: string,
 }
 
 export interface CreateProduct {

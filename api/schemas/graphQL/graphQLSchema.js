@@ -1,22 +1,7 @@
 const { GraphQLSchema, GraphQLObjectType , GraphQLID, GraphQLString, GraphQLInt, GraphQLList } = require("graphql");
 const Product = require("../../models/Product");
-const Vendor = require("../../models/Vendor");
 
 //#region Types
-
-const VendorType = new GraphQLObjectType({
-    name: "Vendor",
-    fields: () => ({
-        _id:    { type: GraphQLID },
-        name:   { type: GraphQLString },
-        products: {
-            type: new GraphQLList(ProductType),
-            resolve(parent, _) {
-                return Product.find({ vendorId: parent._id });
-            }
-        }
-    })
-});
 
 const ProductType = new GraphQLObjectType({
     name: "Product",
@@ -28,35 +13,16 @@ const ProductType = new GraphQLObjectType({
         tag:            { type: GraphQLString },
         rating:         { type: GraphQLInt },
         description:    { type: GraphQLString },
-        imageName:      { type: GraphQLString },
-        vendor: {
-            type: VendorType,
-            resolve(parent, _) {
-                return Vendor.findById(parent.vendorId);
-            }
-        }
+        imageName:      { type: GraphQLString }
     })
 });
 
 //#endregion
 //#region Get
-
+  
 const RootQuery = new GraphQLObjectType({
     name: "RootQueryType",
     fields: { 
-        vendor: {
-            type: VendorType,
-            args: { id: { type: GraphQLID } },
-            resolve(_, args) {
-                return Vendor.findById(args.id);
-            }
-        },
-        vendors: {
-            type: new GraphQLList(VendorType),
-            resolve(_, _1) {
-                return Vendor.find({  });
-            }
-        },
         product: {
             type: ProductType,
             args: { id: { type: GraphQLID } },
@@ -66,8 +32,8 @@ const RootQuery = new GraphQLObjectType({
         },
         products: {
             type: new GraphQLList(ProductType),
-            resolve(_, _1) {
-                return Product.find({  });
+            async resolve(_, _1) {
+                return (await Product.find({  }));
             }
         }
     }
@@ -79,29 +45,16 @@ const RootQuery = new GraphQLObjectType({
 const Mutation = new GraphQLObjectType({
     name: "Mutation", 
     fields: {
-        addVendor: {
-            type: VendorType,
-            args: {
-                name: { type: GraphQLString }
-            },
-            resolve(_, args) {
-                const vendor = new Vendor({
-                    name: args.name
-                });
-                return vendor.save();
-            }
-        },
         addProduct: {
             type: ProductType,
             args: {
                 name:           { type: GraphQLString },
                 price:          { type: GraphQLString },
-                category:          { type: GraphQLString },
+                category:       { type: GraphQLString },
                 tag:            { type: GraphQLString },
                 rating:         { type: GraphQLInt },
                 description:    { type: GraphQLString },
-                imageName:      { type: GraphQLString },
-                vendorId:       { type: GraphQLID }
+                imageName:      { type: GraphQLString }
             },
             resolve(_, args) {
                 const product = new Product({
@@ -111,12 +64,48 @@ const Mutation = new GraphQLObjectType({
                     rating: args.rating,
                     description: args.description,
                     imageName: args.imageName,
-                    category: args.category,
-                    vendorId: args.vendorId
+                    category: args.category
                 });
                 return product.save();
             }
         },
+        updateProduct: {
+            type: ProductType,
+            args: {
+                ID:             { type: GraphQLID },
+                name:           { type: GraphQLString },
+                price:          { type: GraphQLString },
+                category:       { type: GraphQLString },
+                tag:            { type: GraphQLString },
+                rating:         { type: GraphQLInt },
+                description:    { type: GraphQLString },
+                imageName:      { type: GraphQLString }
+            },
+            resolve(parent, args) {
+                
+                const product = Product.findById(args.ID);
+                
+                return Product.findByIdAndUpdate(args.ID, {
+                    name: args.name ?? product.name,
+                    price: args.price ?? product.price,
+                    tag: args.tag ?? product.tag,
+                    rating: args.rating ?? product.rating,
+                    description: args.description ?? product.description,
+                    imageName: args.imageName ?? product.imageName,
+                    category: args.category ?? product.category,
+                });
+
+            }
+        },
+        removeProduct: {
+            type: ProductType,
+            args: {
+                ID: { type: GraphQLID }
+            },
+            resolve(parent, args) {
+                return Product.findByIdAndRemove(args.ID);
+            }
+        }
     }
 });
 

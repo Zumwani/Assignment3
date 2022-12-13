@@ -17,8 +17,7 @@ import CrudTest from './renderers/views/Crud-Test';
 import './App.css';
 
 //TODO: Reimplement reset endpoint on server
-//TODO: Fix user popup not updating position on viewport change
-//TODO: Remove vendor from api, not necessary in this project
+//TODO: Fix auth again
 
 const App: React.FC = () =>
 (

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
+import { CreateProduct, DefaultCreateProduct, Product } from '../../models/Product'
+import { ProductContext, useProducts } from '../../utility/ProductUtility';
+import { useQuery, useMutation, gql } from '@apollo/client';
 import Input from '../components/Contact/Input'
 import TextArea from '../components/Contact/TextArea'
 import Tab from '../components/Tab';
 import TabControl from '../components/TabControl';
-import { CreateProduct, DefaultCreateProduct, Product } from '../../models/Product'
-import { ProductContext, useProducts } from '../../utility/ProductUtility';
 
 interface TabParam {
 
@@ -43,7 +44,7 @@ const CrudTest: React.FC = () => {
 
     const [selectedTab, setSelectedTab] = useState<string>("list");
     const [readForm, setReadForm] = useState<string>("");
-    const [updateForm, setUpdateForm] = useState<Product>({ articleNumber: "", name: "", imageName: "", rating: 0, category: "", description: "", price: 0 });
+    const [updateForm, setUpdateForm] = useState<Product>({ _id: "", name: "", imageName: "", rating: 0, category: "", description: "", price: 0 });
     const [deleteForm, setDeleteForm] = useState<string>("");
  
     const getStatus = () => status;
@@ -126,7 +127,7 @@ const ListTab = (param: TabParam) => {
     useEffect(refresh, [selectedTab]);
 
     const onReadClick = (product: Product) => {
-        setReadForm(product.articleNumber);
+        setReadForm(product._id);
         setSelectedTab("read");
     }
     
@@ -136,7 +137,7 @@ const ListTab = (param: TabParam) => {
     }
     
     const onDeleteClick = (product: Product) => {
-        setDeleteForm(product.articleNumber);
+        setDeleteForm(product._id);
         setSelectedTab("delete");
     }
 
@@ -149,7 +150,7 @@ const ListTab = (param: TabParam) => {
             <table cellPadding={20}>
                 <thead>
                     <tr>
-                        <th>Article Number:</th>
+                        <th>_id:</th>
                         <th>Name:</th>
                         <th>Category:</th>
                         <th>Tag:</th>
@@ -163,8 +164,8 @@ const ListTab = (param: TabParam) => {
                 {
                     products !== undefined && (products?.length ?? 0 > 0)
                     ? products?.map(p =>
-                        <tr key={p.articleNumber}>
-                            <td>{p.articleNumber}</td>
+                        <tr key={p._id}>
+                            <td>{p._id}</td>
                             <td>{p.name}</td>
                             <td>{p.category}</td>
                             <td>{p.tag}</td>
@@ -287,7 +288,7 @@ const ReadTab = (param: TabParam) => {
         context.readProduct(readForm)
         .then((product) => {
             setProduct(product);
-            setSuccess("Retrieved product '" + product.articleNumber + "'.");
+            setSuccess("Retrieved product '" + product._id + "'.");
         })
         .catch(e => { setError(e); setProduct(null); });
         
@@ -302,7 +303,7 @@ const ReadTab = (param: TabParam) => {
                         <tbody>
                             <tr>
                                 <td>Article Number:</td>
-                                <td><Input id="articleNumber" placeholder='Article Number' value={readForm} onChange={handleChange} onKeyUp={() => {}}/></td>
+                                <td><Input id="_id" placeholder='_id' value={readForm} onChange={handleChange} onKeyUp={() => {}}/></td>
                             </tr>
                         </tbody>
                     </table>
@@ -316,7 +317,7 @@ const ReadTab = (param: TabParam) => {
                             <tbody>
                                 <tr>
                                     <td>Article Number:</td>
-                                    <td>{product?.articleNumber}</td>
+                                    <td>{product?._id}</td>
                                 </tr>
                                 <tr>
                                     <td>Name:</td>
@@ -374,8 +375,8 @@ const UpdateTab = (param: TabParam) => {
         context.updateProduct(updateForm)
         .then(() => {
             setTimeout(() => setSelectedTab("list"), 1000);
-            setUpdateForm({ articleNumber: "", name: "", imageName: "", rating: 0, category: "", description: "", price: 0 });
-            return setSuccess("Product '" + updateForm.articleNumber + "' updated. Returning to list tab...");
+            setUpdateForm({ _id: "", name: "", imageName: "", rating: 0, category: "", description: "", price: 0 });
+            return setSuccess("Product '" + updateForm._id + "' updated. Returning to list tab...");
         })
         .catch(setError);
 
@@ -390,7 +391,7 @@ const UpdateTab = (param: TabParam) => {
                         <tbody>
                             <tr>
                                 <td>Article Number:</td>
-                                <td><Input id="articleNumber" placeholder='Article Number' value={updateForm?.articleNumber} onChange={onChange} onKeyUp={() => {}}/></td>
+                                <td><Input id="_id" placeholder='_id' value={updateForm?._id} onChange={onChange} onKeyUp={() => {}}/></td>
                             </tr>
                             <tr>
                                 <td>Name:</td>
@@ -465,7 +466,7 @@ const DeleteTab = (param: TabParam) => {
                         <tbody>
                             <tr>
                                 <td>Article Number:</td>
-                                <td><Input id="articleNumber" placeholder='Article Number' value={deleteForm ?? ""} onChange={handleChange} onKeyUp={() => {}}/></td>
+                                <td><Input id="_id" placeholder='_id' value={deleteForm ?? ""} onChange={handleChange} onKeyUp={() => {}}/></td>
                             </tr>
                         </tbody>
                     </table>

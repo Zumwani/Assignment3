@@ -23,16 +23,16 @@ export const WishlistProvider: React.FC<Param> = ({ children }) => {
     const [wishlistItems, setWishlistItems] = useState<string[]>([]);
 
     const wishlistQuanitity = wishlistItems?.length ?? 0;
-    const isWishlisted = (product: Product): boolean => wishlistItems?.find(articleNumber => articleNumber === product?.articleNumber) != null;
+    const isWishlisted = (product: Product): boolean => wishlistItems?.find(_id => _id === product?._id) != null;
 
     const toggleItem = (product: Product) => {
 
         let items:string[] = [...wishlistItems];
 
-        var index = items.indexOf(product.articleNumber);
+        var index = items.indexOf(product._id);
 
         if (index === -1) {
-            items.push(product.articleNumber);
+            items.push(product._id);
         } else {
             items.splice(index, 1);
         }

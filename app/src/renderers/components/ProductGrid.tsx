@@ -25,7 +25,7 @@ const ProductGrid: React.FC<Params> = ({ products, columns = 1, className, inner
 )
 
 const createProductButton = (item: Product, itemClassName?: string|null) => {
-  return item == null ? null : <ProductButton key={item.articleNumber} product={item} className={itemClassName}/>
+  return item == null ? null : <ProductButton key={item._id} product={item} className={itemClassName}/>
 } 
 
 export default ProductGrid

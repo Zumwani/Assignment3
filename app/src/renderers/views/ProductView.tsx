@@ -52,7 +52,7 @@ const ProductView: React.FC = () => {
                 <div className='w-100 text-start mx-5 mt-lg-0 mt-5 w-md-auto'>
 
                     <h5 className='mb-0 text-start'>{product.name}</h5>
-                    <p className='c-gray'>{ "SKU: " + product.articleNumber}</p>
+                    <p className='c-gray'>{ "SKU: " + product._id}</p>
                     <p className='c-gray'>BRAND: The Northland</p>
                     <Rating count={product.rating}/>
                     <h6 className='m-2 ms-0'>{formatCurrency(product.price)}</h6>

@@ -23,7 +23,7 @@ const ShoppingCartView: React.FC = () => {
             { 
                 cart.cartItems.length === 0
                 ? <p className='ms-5 mb-2'>No items in cart.</p>
-                : cart.cartItems.map((item:CartItem) => (<ShoppingCartItem key={item.articleNumber} item={item}/>)) 
+                : cart.cartItems.map((item:CartItem) => (<ShoppingCartItem key={item._id} item={item}/>)) 
             }
             </div>
 

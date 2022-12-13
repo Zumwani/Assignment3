@@ -2,13 +2,15 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { CreateProduct, Product } from "../models/Product";
 import { ProductList } from "../models/ProductList";
 import { useUser } from "./UserUtility";
+import { useQuery, useMutation, gql } from '@apollo/client';
+import { useLazyQuery } from "@apollo/client/react";
 
 export interface ProductContext {
   cachedProducts: ProductList, 
   list: () => Promise<Product[]>;
-  getProduct: (articleNumber: string) => Product | null;
+  getProduct: (_id: string) => Product | null;
   createProduct: (product: CreateProduct) => Promise<string>;
-  readProduct: (articleNumber: string) => Promise<Product>;
+  readProduct: (_id: string) => Promise<Product>;
   updateProduct: (product: Product) => Promise<void>;
   deleteProduct: (product: Product|string|null) => Promise<void>;
 }
@@ -22,7 +24,42 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
   const baseURL = "http://localhost:5000/api/";
   const productURL = baseURL + "products/";
   const tagsURL = productURL + "tags/";
+  const GET_PRODUCTS_QUERY = gql`{ products { _id, name, price, tag, rating, description, imageName, category } }`
 
+  const GET_PRODUCT_QUERY = gql
+  `
+    query ReadProduct($ID: ID!) {
+      product(id: $ID) { _id, name, price, tag, rating, description, imageName, category }
+    }
+  `;
+
+  const ADD_PRODUCT_QUERY = gql
+  `
+    mutation AddProduct($name: String!, $price: String!, $category: String!, $tag: String, $rating: Int!, $description: String!, $imageName: String!) {
+      addProduct(name: $name, price: $price, category: $category, tag: $tag, rating: $rating, description: $description, imageName: $imageName) {
+        name
+      }
+    }
+  `;
+
+  const UPDATE_PRODUCT_QUERY = gql
+  `
+    mutation UpdateProduct($ID: ID!, $name: String, $price: String, $category: String, $tag: String, $rating: Int, $description: String, $imageName: String) {
+      updateProduct(ID: $ID, name: $name, price: $price, category: $category, tag: $tag, rating: $rating, description: $description, imageName: $imageName) {
+        name
+      }
+    }
+  `;
+  
+  const DELETE_PRODUCT_QUERY = gql
+  `
+    mutation RemoveProduct($ID: ID!) {
+      removeProduct(ID: $ID) {
+        _id
+      }
+    }
+  `;
+  
   const user = useUser();
 
   //#region Cached products
@@ -38,8 +75,8 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
     topReacted: [] 
   });
   
-  const getProduct = (articleNumber: string): Product | null =>
-    cachedProducts.all.find(p => p.articleNumber === articleNumber || p.name.replaceAll(" ", "-").toLowerCase() === articleNumber) ?? null;
+  const getProduct = (_id: string): Product | null =>
+    cachedProducts.all.find(p => p._id === _id || p.name.replaceAll(" ", "-").toLowerCase() === _id) ?? null;
   
   useEffect(() => {
     
@@ -71,16 +108,43 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
   //#endregion
   //#region Crud
 
+  const productsQuery:any = useQuery(GET_PRODUCTS_QUERY);
+
+  const [addProduct] = useMutation(ADD_PRODUCT_QUERY, {
+    refetchQueries: [
+      { query: GET_PRODUCTS_QUERY },
+      "GetProducts"
+    ]
+  });
+
+  const [_updateProduct] = useMutation(UPDATE_PRODUCT_QUERY, {
+    refetchQueries: [
+      { query: GET_PRODUCTS_QUERY },
+      "GetProducts"
+    ]
+  });
+
+  const [_readProduct] = useLazyQuery(GET_PRODUCT_QUERY);
+
+  const [removeProduct] = useMutation(DELETE_PRODUCT_QUERY, {
+    refetchQueries: [
+      { query: GET_PRODUCTS_QUERY },
+      "GetProducts"
+    ]
+  });
+
+  const sleep = (ms: number) =>
+    new Promise(resolve => setTimeout(resolve, ms));
+
   const list = async () => {
     
-    let result = await fetch(productURL, {
-      method: "get",
-      headers: {
-        "Content-Type": "application/json"
-      },
-    });
+    while (productsQuery.loading)
+      await sleep(100);
 
-    return (await result.json() as Product[]) ?? [];
+    if (productsQuery.error)
+      throw productsQuery.error;
+
+    return productsQuery.data.products ?? [];
 
   }
   
@@ -98,68 +162,66 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
   }
   
   const createProduct = async (product: CreateProduct) => {
+
+   const result = await addProduct({ variables: {
+      name: product.name,
+      price: product.price.toString(),
+      category: product.category,
+      tag: product.tag,
+      rating: product.rating,
+      description: product.description,
+      imageName: product.imageName
+    }});
+
+    if (result.errors)
+      throw result.errors;
+
+    return result.data.addProduct.name;
     
-    let result = await fetch(productURL, {
-      method: "post",
-      headers:{
-        "Content-Type": "application/json",
-        "authorization": "Bearer " + user?.user?.token
-      },
-      body: JSON.stringify(product)
-    });
-
-    if (result.status === 201)
-      return (await result.json())["articleNumber"] as string;
-    else
-      throw new Error("The product could not be created.");
-
   }
   
-  const readProduct = async (articleNumber: string) => {
+  const readProduct = async (_id: string) => {
     
-    if (!articleNumber)
+    if (!_id)
       throw new Error("Article number cannot be null.");
 
-    let result = await fetch(productURL + articleNumber, {
-      method: "get"
-    });
+    const result = await _readProduct({ variables: { ID: _id } });
+    if (result.error)
+      throw result.error;
 
-    if (result.status === 200)
-      return await result.json() as Product;
-    else
-      throw new Error("The product '" + articleNumber + "' could not be found.");
-
+    return result.data.product;
+  
   }
   
   const updateProduct = async (product: Product) => {
 
-    let result = await fetch(productURL, {
-      method: "put",
-      headers:{
-        "Content-Type": "application/json",
-        "authorization": "Bearer " + user?.user?.token
-      },
-      body: JSON.stringify(product)
-    });
+    const result = await _updateProduct({ variables: {
+      ID: product._id,
+      name: product.name,
+      price: product.price.toString(),
+      category: product.category,
+      tag: product.tag,
+      rating: product.rating,
+      description: product.description,
+      imageName: product.imageName
+    }});
 
-    if (result.status !== 204)
-      throw new Error("Product '" + product.articleNumber + "' could not be updated.");
+    if (result.errors)
+      throw result.errors;
+
+    return result.data.updateProduct.name;
 
   }
   
   const deleteProduct = async (product: Product|string|null) => {
     
-    const articleNumber = product as string ?? (product as Product)?.articleNumber;
-    
-    let result = await fetch(productURL + articleNumber, {
-      method: "delete",
-      headers: {
-        "authorization": "Bearer " + user?.user?.token
-      }
-    });
-    
-    if (result.status !== 204)
-      throw new Error("Product '" + articleNumber + "' could not be deleted.");
+    const _id = product as string ?? (product as Product)?._id;
+    const result = await removeProduct({ variables: { ID: _id }});
+
+    if (result.errors)
+      throw result.errors;
+
+    return result.data.removeProduct.name;
 
   }
 

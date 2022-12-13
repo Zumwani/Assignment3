@@ -26,7 +26,7 @@ const WishlistView = () => {
             {
                 wishlistItems === null || wishlistItems.length === 0
                 ? <p className='ms-5 mb-2'>No items in wishlist.</p>
-                : wishlistItems.map(articleNumber => (<WishlistItem key={articleNumber} product={getProduct(articleNumber) ?? null}/>)) 
+                : wishlistItems.map(_id => (<WishlistItem key={_id} product={getProduct(_id) ?? null}/>)) 
             }
             </div>
 
