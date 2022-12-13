@@ -238,7 +238,7 @@ const CreateTab = (param: TabParam) => {
                             </tr>
                             <tr>
                                 <td>Tag:</td>
-                                <td><Input id="tag" placeholder='Tags' value={product?.tag ?? ""} onChange={onChange} onKeyUp={() => {}}/></td>
+                                <td><Input id="tag" placeholder='Tag' value={product?.tag ?? ""} onChange={onChange} onKeyUp={() => {}}/></td>
                             </tr>
                             <tr>
                                 <td>Price:</td>

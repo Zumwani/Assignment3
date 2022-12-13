@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import ActionButton from '../components/ActionButton';
 import Input from '../components/Contact/Input';
 import Tab from '../components/Tab';
@@ -24,6 +24,9 @@ const UserPopup: React.FC<Params> = ({ isOpen, didOpenThisFrame, button }) => {
         return <></>
 
     const setPosition = () => {
+        
+        if (!isOpen)
+            return;
 
         const placementTarget = button();
         const popup = document.querySelector("#user-popup") as HTMLElement;
@@ -50,8 +53,10 @@ const UserPopup: React.FC<Params> = ({ isOpen, didOpenThisFrame, button }) => {
         
     }
 
-    if (isOpen)
-        setPosition();
+    setPosition();
+
+    window.removeEventListener('resize', setPosition);      
+    window.addEventListener('resize', setPosition);      
 
     //#region Login
     
@@ -117,7 +122,7 @@ const UserPopup: React.FC<Params> = ({ isOpen, didOpenThisFrame, button }) => {
 
                             </form>
                         </Tab>
-
+                        
                         <Tab id='signup' header='Register'>
                             <form onSubmit={onSubmitRegister} noValidate className='pt-4'>
                                 <Input id='email' placeholder='test@domain.com' value={registerForm.email} onChange={onChangeRegister} onKeyUp={onKeyUpRegister}/>

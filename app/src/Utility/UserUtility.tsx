@@ -1,5 +1,4 @@
 import { createContext, useContext, useState } from "react";
-import { register } from "ts-node";
 import { User } from "../models/User";
 
 export interface UserContext {
@@ -53,7 +52,7 @@ export const UserProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
         }).then(async response => {
 
             console.log(response.statusText);
-            if (response.status == 201)
+            if (response.status === 201)
                 login(email, password);
             else
                 throw new Error((await response.json()).text);
