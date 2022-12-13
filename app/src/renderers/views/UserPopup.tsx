@@ -23,11 +23,13 @@ const UserPopup: React.FC<Params> = ({ isOpen, didOpenThisFrame, button }) => {
     if (user == null)
         return <></>
 
+    //#region Position
+    
     const setPosition = () => {
         
         if (!isOpen)
             return;
-
+        
         const placementTarget = button();
         const popup = document.querySelector("#user-popup") as HTMLElement;
         
@@ -51,13 +53,18 @@ const UserPopup: React.FC<Params> = ({ isOpen, didOpenThisFrame, button }) => {
             popup.style.right = "12px";
         }
         
+        popup.classList.remove("open");
+        popup.classList.add("open");
+
     }
-
+    
+    setTimeout(setPosition, 1);
     setPosition();
-
+    
     window.removeEventListener('resize', setPosition);      
     window.addEventListener('resize', setPosition);      
-
+    
+    //#endregion
     //#region Login
     
     const onChangeLogin = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -93,8 +100,8 @@ const UserPopup: React.FC<Params> = ({ isOpen, didOpenThisFrame, button }) => {
 
     //#endregion
     
-    return (
-        <div id="user-popup" className={ (isOpen ? "open" : undefined) }>
+    return !isOpen ? null : (
+        <div id="user-popup">
             <div className="p-4">
 
                 {
