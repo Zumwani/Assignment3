@@ -1,5 +1,5 @@
 import React from 'react'
-import { Product } from '../models/Product'
+import { Product } from '../../models/Product'
 import ProductButton from './ProductButton'
 
 type Params = {

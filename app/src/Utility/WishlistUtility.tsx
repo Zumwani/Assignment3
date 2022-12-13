@@ -1,6 +1,6 @@
 import React, { createContext, ReactNode, useContext, useState } from "react";
 import { Product } from "../models/Product";
-import WishlistView from "../views/Wishlist";
+import WishlistView from "../renderers/views/Wishlist";
 
 interface WishlistContext {
     wishlistItems: string[], 

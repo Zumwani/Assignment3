@@ -3,8 +3,8 @@ import Input from '../components/Contact/Input'
 import TextArea from '../components/Contact/TextArea'
 import Tab from '../components/Tab';
 import TabControl from '../components/TabControl';
-import { CreateProduct, DefaultCreateProduct, Product } from '../models/Product'
-import { ProductContext, useProducts } from '../Utility/ProductUtility';
+import { CreateProduct, DefaultCreateProduct, Product } from '../../models/Product'
+import { ProductContext, useProducts } from '../../utility/ProductUtility';
 
 interface TabParam {
 

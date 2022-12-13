@@ -1,8 +1,8 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom';
-import { Product } from '../../models/Product';
-import { productURL } from '../../Utility/ProductUtility';
-import { useWishlist } from '../../Utility/WishlistUtility';
+import { Product } from '../../../models/Product';
+import { productURL } from '../../../utility/ProductUtility';
+import { useWishlist } from '../../../utility/WishlistUtility';
 
 type Params = {
     key: string,

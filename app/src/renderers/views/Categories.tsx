@@ -1,6 +1,6 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom';
-import { useProducts } from '../Utility/ProductUtility'
+import { useProducts } from '../../utility/ProductUtility'
 import CategoryButton from '../components/CategoryButton';
 import ProductGrid from '../components/ProductGrid';
 import Breadcrumb from '../sections/Breadcrumb';

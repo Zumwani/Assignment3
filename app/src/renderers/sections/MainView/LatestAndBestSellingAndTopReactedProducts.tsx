@@ -1,6 +1,6 @@
 import React from 'react'
 import ProductGrid from '../../components/ProductGrid';
-import { useProducts } from '../../Utility/ProductUtility';
+import { useProducts } from '../../../utility/ProductUtility';
 
 const Latest_BestSelling_TopReactedSection: React.FC = () => {
 

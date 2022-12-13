@@ -1,19 +1,19 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { ProductProvider } from './Utility/ProductUtility';
-import { ShoppingCartProvider } from './Utility/ShoppingCartUtility';
-import { WishlistProvider } from './Utility/WishlistUtility';
-import { NavigationManager } from './Utility/NavigationUtility';
-import { UserProvider } from './Utility/UserUtility';
-import NavBar from './sections/NavBar';
-import Footer from './sections/Footer';
-import MainView from './views/Main';
-import CategoriesView from './views/Categories';
-import ProductsView from './views/ProductsView';
-import ProductView from './views/ProductView';
-import ContactView from './views/Contact';
-import NotFoundView from './views/NotFound';
-import CrudTest from './views/Crud-Test';
+import { ProductProvider } from './utility/ProductUtility';
+import { ShoppingCartProvider } from './utility/ShoppingCartUtility';
+import { WishlistProvider } from './utility/WishlistUtility';
+import { NavigationManager } from './utility/NavigationUtility';
+import { UserProvider } from './utility/UserUtility';
+import NavBar from './renderers/sections/NavBar';
+import Footer from './renderers/sections/Footer';
+import MainView from './renderers/views/Main';
+import CategoriesView from './renderers/views/Categories';
+import ProductsView from './renderers/views/ProductsView';
+import ProductView from './renderers/views/ProductView';
+import ContactView from './renderers/views/Contact';
+import NotFoundView from './renderers/views/NotFound';
+import CrudTest from './renderers/views/Crud-Test';
 import './App.css';
 
 //TODO: Reimplement reset endpoint on server

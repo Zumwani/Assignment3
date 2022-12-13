@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
-import { useProducts } from '../Utility/ProductUtility';
-import { useWishlist } from '../Utility/WishlistUtility';
+import { useProducts } from '../../utility/ProductUtility';
+import { useWishlist } from '../../utility/WishlistUtility';
 import WishlistItem from '../components/Sidebar/WishlistItem';
 
 const WishlistView = () => {

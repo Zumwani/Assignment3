@@ -1,7 +1,7 @@
 import React from 'react'
 import ProductButton from '../../components/ProductButton'
 import SaleButton from '../../components/SaleButton'
-import { useProducts } from '../../Utility/ProductUtility'
+import { useProducts } from '../../../utility/ProductUtility'
 
 const WeirdAlignSections: React.FC = () => {
 

@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom';
-import { useShoppingCart } from '../Utility/ShoppingCartUtility';
-import { useWishlist } from '../Utility/WishlistUtility';
+import { useShoppingCart } from '../../utility/ShoppingCartUtility';
+import { useWishlist } from '../../utility/WishlistUtility';
+import { useUser } from '../../utility/UserUtility';
 import IconButton from '../components/IconButton';
-import { useUser } from '../Utility/UserUtility';
 import UserPopup from '../views/UserPopup';
 
 const NavBar: React.FC = () => {

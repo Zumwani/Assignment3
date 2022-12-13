@@ -1,5 +1,5 @@
 import React from 'react'
-import { useProducts } from '../../Utility/ProductUtility';
+import { useProducts } from '../../../utility/ProductUtility';
 import ProductGrid from '../../components/ProductGrid';
 
 const FeaturedProductsSection: React.FC = () => {

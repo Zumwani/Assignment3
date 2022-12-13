@@ -2,12 +2,11 @@ import React from 'react'
 import ActionButton from '../components/ActionButton'
 import Rating from './Rating'
 import { NavLink } from 'react-router-dom'
-import { useShoppingCart } from '../Utility/ShoppingCartUtility'
-import { formatCurrency } from '../Utility/CurrencyUtility'
-import { useWishlist } from '../Utility/WishlistUtility'
-import { categoryURL, productURL } from '../Utility/ProductUtility'
-import { Product } from '../models/Product'
-import { prettyDOM } from '@testing-library/react'
+import { useShoppingCart } from '../../utility/ShoppingCartUtility'
+import { formatCurrency } from '../../utility/CurrencyUtility'
+import { useWishlist } from '../../utility/WishlistUtility'
+import { categoryURL, productURL } from '../../utility/ProductUtility'
+import { Product } from '../../models/Product'
 
 type Params = {
     product: Product,

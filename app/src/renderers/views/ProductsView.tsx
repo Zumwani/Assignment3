@@ -1,9 +1,9 @@
 import React from 'react'
 import ProductGrid from '../components/ProductGrid';
 import BreadcrumbSection from '../sections/Breadcrumb';
-import { useProducts } from '../Utility/ProductUtility';
+import { useProducts } from '../../utility/ProductUtility';
 import { NavLink, useParams } from 'react-router-dom';
-import { ProductList } from '../models/ProductList';
+import { ProductList } from '../../models/ProductList';
 
 const ProductsView: React.FC = () => {
 

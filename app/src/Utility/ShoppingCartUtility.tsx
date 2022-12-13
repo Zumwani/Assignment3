@@ -1,7 +1,7 @@
 import React, { createContext, ReactNode, useContext, useState } from "react";
 import { CartItem } from "../models/CartItem";
 import { Product } from "../models/Product";
-import ShoppingCart from "../views/ShoppingCart";
+import ShoppingCart from "../renderers/views/ShoppingCart";
 
 interface ShoppingCartContext {
     cartItems: CartItem[], 

@@ -1,9 +1,9 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom';
-import { CartItem } from '../../models/CartItem';
-import { formatCurrency } from '../../Utility/CurrencyUtility';
-import { productURL } from '../../Utility/ProductUtility';
-import { useShoppingCart } from '../../Utility/ShoppingCartUtility'
+import { CartItem } from '../../../models/CartItem';
+import { formatCurrency } from '../../../utility/CurrencyUtility';
+import { productURL } from '../../../utility/ProductUtility';
+import { useShoppingCart } from '../../../utility/ShoppingCartUtility'
 import UpDown from './../UpDown';
 
 type Param = {

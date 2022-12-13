@@ -1,14 +1,13 @@
 import React from 'react'
 import { NavLink, useParams } from 'react-router-dom'
-import { formatCurrency } from '../Utility/CurrencyUtility';
-import { useProducts } from '../Utility/ProductUtility';
-import { useShoppingCart } from '../Utility/ShoppingCartUtility';
+import { formatCurrency } from '../../utility/CurrencyUtility';
+import { useProducts } from '../../utility/ProductUtility';
+import { useShoppingCart } from '../../utility/ShoppingCartUtility';
 import ExternalLink from '../components/ExternalLink';
 import Rating from '../components/Rating';
 import UpDown from '../components/UpDown';
 import ProductGrid from '../components/ProductGrid';
 import TabControl from '../components/TabControl';
-// import Tab from '../components/Tab';
 import Toggle from '../components/Toggle';
 import Breadcrumb from '../sections/Breadcrumb';
 import Tab from '../components/Tab';

@@ -1,8 +1,8 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom';
-import { formatCurrency } from '../Utility/CurrencyUtility';
-import { useShoppingCart } from '../Utility/ShoppingCartUtility'
-import { CartItem } from '../models/CartItem';
+import { formatCurrency } from '../../utility/CurrencyUtility';
+import { useShoppingCart } from '../../utility/ShoppingCartUtility'
+import { CartItem } from '../../models/CartItem';
 import ShoppingCartItem from '../components/Sidebar/ShoppingCartItem';
 
 const ShoppingCartView: React.FC = () => {

@@ -3,8 +3,8 @@ import ActionButton from '../components/ActionButton';
 import Input from '../components/Contact/Input';
 import Tab from '../components/Tab';
 import TabControl from '../components/TabControl';
-import { CreateUser } from '../models/User';
-import { useUser } from '../Utility/UserUtility';
+import { CreateUser } from '../../models/User';
+import { useUser } from '../../utility/UserUtility';
 
 interface Params {
     isOpen: boolean;

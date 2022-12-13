@@ -1,7 +1,7 @@
 import React from 'react'
 import ActionButton from '../../components/ActionButton';
-import image1 from '../../img/1.png'
-import image2 from '../../img/2.png'
+import image1 from '../../../img/1.png'
+import image2 from '../../../img/2.png'
 
 const Sale50PercentSection: React.FC = () => {
   return (

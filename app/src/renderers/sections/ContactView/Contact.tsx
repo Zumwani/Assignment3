@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import ActionButton from '../../components/ActionButton';
 import Input from '../../components/Contact/Input';
 import TextArea from '../../components/Contact/TextArea';
-import { ContactForm } from '../../models/ContactForm';
-import { FormResult } from '../../models/FormResult';
-import * as Form from '../../Utility/FormUtility';
+import { ContactForm } from '../../../models/ContactForm';
+import { FormResult } from '../../../models/FormResult';
+import * as Form from '../../../utility/FormUtility';
 
 const ContactSection = () => {
     
