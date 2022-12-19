@@ -3,6 +3,7 @@ import { User } from "../models/User";
 
 export interface UserContext {
     user: User|null;
+    isLoggedIn: boolean;
     login: (email: string, password: string) => Promise<void>;
     logout: () => void;
     register: (email: string, password: string) => Promise<void>;
@@ -63,7 +64,7 @@ export const UserProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
 
     } 
 
-    return <Context.Provider value={{ user, login, logout, register }}>
+    return <Context.Provider value={{ user, login, logout, register, isLoggedIn: user !== null }}>
         {children}
     </Context.Provider>
 

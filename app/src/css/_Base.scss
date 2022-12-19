@@ -150,9 +150,13 @@ select {
 table:not(.no-border) {
 
     th, td {
+
+        text-align: center;
+
         &:not(.no-border) {
             border: lightgray 1px solid;
         }
+
     }
 
     Button {

@@ -16,8 +16,8 @@ import NotFoundView from './renderers/views/NotFound';
 import CrudTest from './renderers/views/Crud-Test';
 import './App.css';
 
-//TODO: Reimplement reset endpoint on server
-//TODO: Fix auth again
+//TODO: Clean up css
+//TODO: Verify all points met
 
 const App: React.FC = () =>
 (

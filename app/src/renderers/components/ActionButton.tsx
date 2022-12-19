@@ -9,7 +9,7 @@ type Params = {
 
 const ActionButton: React.FC<Params> = ({ color, simple, text, className }) => {
   return (
-    <button className={"action " + color + (simple ? " simple" : "") + (className ? " " + className : undefined)}>{text}</button>
+    <button className={"action " + color + (simple ? " simple" : "") + (className ? (" " + className) : "")}>{text}</button>
   )
 }
 

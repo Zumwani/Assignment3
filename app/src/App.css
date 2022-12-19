@@ -162,6 +162,9 @@ select {
   padding-right: 12px;
 }
 
+table:not(.no-border) th, table:not(.no-border) td {
+  text-align: center;
+}
 table:not(.no-border) th:not(.no-border), table:not(.no-border) td:not(.no-border) {
   border: lightgray 1px solid;
 }
@@ -460,6 +463,10 @@ table:not(.no-border) tr:hover Button {
 
 .mt-10 {
   margin-top: 92.5px;
+}
+
+.max-height-200 {
+  max-height: 200px;
 }
 
 [data-badge] {

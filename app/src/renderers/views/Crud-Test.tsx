@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { CreateProduct, DefaultCreateProduct, Product } from '../../models/Product'
 import { ProductContext, useProducts } from '../../utility/ProductUtility';
-import { useQuery, useMutation, gql } from '@apollo/client';
+import { useUser } from '../../utility/UserUtility';
 import Input from '../components/Contact/Input'
 import TextArea from '../components/Contact/TextArea'
+import Rating from '../components/Rating';
 import Tab from '../components/Tab';
 import TabControl from '../components/TabControl';
 
@@ -28,6 +29,9 @@ interface TabParam {
     deleteForm: string;
     setDeleteForm: React.Dispatch<React.SetStateAction<string>>;
 
+    isLocked: boolean;
+    lockIcon: string;
+
 }
 
 type Status = {
@@ -36,8 +40,12 @@ type Status = {
     message: string;
 }
 
+const lockIcon = (isLocked: boolean) =>
+    isLocked ? "🔒" : "🔓";
+
 const CrudTest: React.FC = () => {
 
+    const user = useUser();
     const context = useProducts();
 
     const [status, setStatus] = useState<Status>({ isBusy: false, isError: false, message: "" });
@@ -61,7 +69,8 @@ const CrudTest: React.FC = () => {
     if (context == null)
         return <></>
     
-    const param: TabParam = { context, getStatus, setIsBusy, setError, setSuccess, selectedTab, setSelectedTab, readForm, setReadForm, updateForm, setUpdateForm, deleteForm, setDeleteForm }
+    const isLocked = user?.user == null;
+    const param: TabParam = { context, getStatus, setIsBusy, setError, setSuccess, selectedTab, setSelectedTab, readForm, setReadForm, updateForm, setUpdateForm, deleteForm, setDeleteForm, isLocked, lockIcon: lockIcon(isLocked) }
     
     const onTabChanged = (tab: string) =>
         setStatus({ isBusy: false, isError: false, message: "" });
@@ -95,17 +104,25 @@ const StatusMessage = (param: TabParam) => (
 
 const ListTab = (param: TabParam) => {
 
-    const { setIsBusy, setError, setSuccess, selectedTab, setSelectedTab, context, setReadForm, setUpdateForm, setDeleteForm } = param;
+    const { setIsBusy, setError, setSuccess, selectedTab, setSelectedTab, context, setReadForm, setUpdateForm, setDeleteForm, lockIcon } = param;
 
     const [products, setProducts] = useState<Product[]>();
+    const [tags, setTags] = useState<(string|undefined)[]>([undefined]);
+    const [tag, setTag] = useState<string|undefined>(undefined);
+
+    useEffect(() => {
+
+        context.listTags().then(tags => { tags.unshift("None"); setTags(tags); });
+
+    }, []);
 
     const refresh = (force?: boolean) => {
 
         if (selectedTab !== "list" && !force)
             return;
-            
+        
         setIsBusy();
-        context.list()
+        context.listProducts(tag)
         .then(products => {
             setSuccess(products.length + " products retrieved.");
             setProducts(products);
@@ -117,14 +134,21 @@ const ListTab = (param: TabParam) => {
     };
 
     const reset = async () => {
+        context.resetProducts().then(success => { 
             
-        fetch("http://localhost:5000/api/products/reset", { method: "post" })
-        .then(() => refresh(true))
-        .catch(setError);
-        
+            if (success) 
+                setSuccess("All products reset");
+            else
+                setError("Could not reset all products");
+            
+            setTimeout(() => refresh(true), 1000);
+
+        }).
+        catch(e => 
+            setError(e.message));
     }
 
-    useEffect(refresh, [selectedTab]);
+    useEffect(refresh, [selectedTab, tag]);
 
     const onReadClick = (product: Product) => {
         setReadForm(product._id);
@@ -141,11 +165,24 @@ const ListTab = (param: TabParam) => {
         setSelectedTab("delete");
     }
 
+    const onTagChanged = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setTag(e.target.value === "None" ? undefined: e.target.value);
+    }
+
     return (
         <Tab id='list' header='List'>
             <div>
+
                 <button onClick={() => refresh()} className="align-self-end my-5">Refresh</button>
-                <button onClick={reset} className="align-self-end my-5 ms-5">Reset</button>
+                <button onClick={reset} className="align-self-end my-5 ms-5">{"Reset " + lockIcon}</button>
+
+                <label htmlFor="tag" className='ms-5 me-2'>Tag:</label>
+                <select name='tag' id='tag' value={tag} onChange={onTagChanged}>
+                    {
+                        tags.map(t => <option key={t === undefined ? "None" : t} value={t}>{t === undefined ? "None" : t}</option>)
+                    }
+                </select>
+
             </div>
             <table cellPadding={20}>
                 <thead>
@@ -156,7 +193,6 @@ const ListTab = (param: TabParam) => {
                         <th>Tag:</th>
                         <th>Price:</th>
                         <th>Rating:</th>
-                        <th>Description:</th>
                         <th>Image:</th>
                     </tr>
                 </thead>
@@ -170,8 +206,7 @@ const ListTab = (param: TabParam) => {
                             <td>{p.category}</td>
                             <td>{p.tag}</td>
                             <td>{p.price}</td>
-                            <td>{p.rating}</td>
-                            <td>{p.description}</td>
+                            <td><Rating count={p.rating}/></td>
                             <td><img src={p.imageName} title={p.imageName} className="w-64" alt=''/></td>
                             <td className='no-border p-0'>
                                 <button className='fas fa-download p-2 ms-4 my-auto' data-toggle="tooltip" title="Read..." onClick={() => onReadClick(p)}></button>
@@ -195,7 +230,7 @@ const ListTab = (param: TabParam) => {
 
 const CreateTab = (param: TabParam) => {
 
-    const { setIsBusy, setError, setSuccess, context } = param;
+    const { setIsBusy, setError, setSuccess, context, lockIcon } = param;
     const [product, setProduct] = useState<CreateProduct>(DefaultCreateProduct());
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -219,7 +254,7 @@ const CreateTab = (param: TabParam) => {
     };
 
     return (
-        <Tab id='create' header='Create'>
+        <Tab id='create' header={'Create ' + lockIcon}>
             <div>
 
                 <form>
@@ -360,7 +395,7 @@ const ReadTab = (param: TabParam) => {
 
 const UpdateTab = (param: TabParam) => {
 
-    const { setIsBusy, setError, setSuccess, updateForm, setUpdateForm, setSelectedTab, context } = param;
+    const { setIsBusy, setError, setSuccess, updateForm, setUpdateForm, setSelectedTab, context, lockIcon } = param;
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let {id, value} = e.target;
@@ -383,7 +418,7 @@ const UpdateTab = (param: TabParam) => {
     };
 
     return (
-        <Tab id='update' header='Update'>
+        <Tab id='update' header={'Update ' + lockIcon}>
             <div>
 
                 <form>
@@ -435,7 +470,7 @@ const UpdateTab = (param: TabParam) => {
 
 const DeleteTab = (param: TabParam) => {
 
-    const { setIsBusy, setError, setSuccess, deleteForm, setDeleteForm, setSelectedTab, context } = param;
+    const { setIsBusy, setError, setSuccess, deleteForm, setDeleteForm, setSelectedTab, context, lockIcon } = param;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let {value} = e.target;
@@ -458,7 +493,7 @@ const DeleteTab = (param: TabParam) => {
     };
     
     return (
-        <Tab id='delete' header='Delete'>
+        <Tab id='delete' header={'Delete ' + lockIcon}>
             <div>
 
                 <form>
