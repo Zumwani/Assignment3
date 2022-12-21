@@ -79,7 +79,7 @@ const TabControl: React.FC<Params> = ({ children, className, tab, onTabChanged }
 
     return (
         <div className={ 'tab-control ' + (className ?? "") }>
-            <fieldset>
+            <fieldset data-testid='tab-header'>
                 {
                     children.map((tab) => {
                         const { id, header } = tab.props as Tab;
@@ -90,7 +90,7 @@ const TabControl: React.FC<Params> = ({ children, className, tab, onTabChanged }
             {
                 children.map((tab) => {
                     const { id } = tab.props as Tab;
-                    return <div key={id} className={ "tab" + (selectedTab === id ? " active" : "") }>{tab}</div>;
+                    return <div data-testid={id} key={id} className={ "tab" + (selectedTab === id ? " active" : "") }>{tab}</div>;
                 })
             }
         </div>
