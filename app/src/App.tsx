@@ -16,8 +16,7 @@ import NotFoundView from './renderers/views/NotFound';
 import CrudTest from './renderers/views/Crud-Test';
 import './App.css';
 
-//TODO: Clean up css
-//TODO: Verify all points met
+//TODO: Add unit test
 
 const App: React.FC = () =>
 (

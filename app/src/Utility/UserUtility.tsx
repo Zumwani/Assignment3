@@ -64,8 +64,10 @@ export const UserProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
 
     } 
 
-    return <Context.Provider value={{ user, login, logout, register, isLoggedIn: user !== null }}>
-        {children}
-    </Context.Provider>
+    return (
+        <Context.Provider value={{ user, login, logout, register, isLoggedIn: user !== null }}>
+            {children}
+        </Context.Provider>
+    )
 
 }

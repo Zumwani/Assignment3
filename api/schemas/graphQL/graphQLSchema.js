@@ -153,7 +153,7 @@ const Mutation = new GraphQLObjectType({
                     "price": 95,
                     "rating": 4,
                     "imageName": "https://win22imgstorage.blob.core.windows.net/images/black-coat.png",
-                    "tag": "flash-sale"
+                    "tag": "featured"
                 }, {
                     "articleNumber": "20222c00-4548-4149-9efd-49883e9f57b5",
                     "name": "Black dress",
@@ -171,7 +171,7 @@ const Mutation = new GraphQLObjectType({
                     "price": 107,
                     "rating": 3,
                     "imageName": "https://win22imgstorage.blob.core.windows.net/images/black-set.png",
-                    "tag": "flash-sale"
+                    "tag": "featured"
                 }, {
                     "articleNumber": "4bf6d7af-aa33-455c-9403-8301ea13071c",
                     "name": "White top & black pants set",
@@ -180,7 +180,7 @@ const Mutation = new GraphQLObjectType({
                     "price": 115,
                     "rating": 2,
                     "imageName": "https://win22imgstorage.blob.core.windows.net/images/black-white-set.png",
-                    "tag": "flash-sale"
+                    "tag": "featured"
                 }, {
                     "articleNumber": "77e280d3-7c56-41d0-8b48-1e5c8a4f1605",
                     "name": "Blue jacket",
@@ -207,7 +207,7 @@ const Mutation = new GraphQLObjectType({
                     "price": 25,
                     "rating": 5,
                     "imageName": "https://win22imgstorage.blob.core.windows.net/images/blue-tshirt.png",
-                    "tag": "flash-sale"
+                    "tag": "featured"
                 }, {
                     "articleNumber": "cda0aa8d-c0e1-41a7-ae26-343ffc84e141",
                     "name": "Brown sweater",
@@ -252,7 +252,7 @@ const Mutation = new GraphQLObjectType({
                     "price": 55,
                     "rating": 4,
                     "imageName": "https://win22imgstorage.blob.core.windows.net/images/jeans-dress.png",
-                    "tag": "featured"
+                    "tag": "flash-sale"
                 }, {
                     "articleNumber": "431255c5-eea7-40bd-9260-06ad7e83fbcd",
                     "name": "Jeans jacket & pants",
@@ -270,7 +270,7 @@ const Mutation = new GraphQLObjectType({
                     "price": 19,
                     "rating": 2,
                     "imageName": "https://win22imgstorage.blob.core.windows.net/images/olive-sweater.png",
-                    "tag": "best-selling"
+                    "tag": "flash-sale"
                 }, {
                     "articleNumber": "dafda4ec-f15e-4e23-b223-b9f037a894a7",
                     "name": "Multicolor t-shirt",
@@ -279,7 +279,7 @@ const Mutation = new GraphQLObjectType({
                     "price": 25,
                     "rating": 2,
                     "imageName": "https://win22imgstorage.blob.core.windows.net/images/multicolor-tshirt.png",
-                    "tag": ""
+                    "tag": "flash-sale"
                 }, {
                     "articleNumber": "b3044087-7272-4885-9da7-69b1b769fa3b",
                     "name": "Purple handbag",
@@ -288,7 +288,7 @@ const Mutation = new GraphQLObjectType({
                     "price": 99,
                     "rating": 5,
                     "imageName": "https://win22imgstorage.blob.core.windows.net/images/purple-bag.png",
-                    "tag": ""
+                    "tag": "flash-sale"
                 }, {
                     "articleNumber": "1721de3f-4104-4a8f-b090-fb385c446146",
                     "name": "Red handbag",
@@ -297,7 +297,7 @@ const Mutation = new GraphQLObjectType({
                     "price": 105,
                     "rating": 5,
                     "imageName": "https://win22imgstorage.blob.core.windows.net/images/red-bag.png",
-                    "tag": "featured"
+                    "tag": "latest"
                 }, {
                     "articleNumber": "fab80814-1d85-4c31-a6df-4c0385a1607b",
                     "name": "Red dress",
@@ -306,7 +306,7 @@ const Mutation = new GraphQLObjectType({
                     "price": 67,
                     "rating": 3,
                     "imageName": "https://win22imgstorage.blob.core.windows.net/images/red-dress.png",
-                    "tag": ""
+                    "tag": "latest"
                 }, {
                     "articleNumber": "6e42e94a-7aac-4b65-8dc1-2ba735383f9e",
                     "name": "Striped top",
@@ -315,7 +315,7 @@ const Mutation = new GraphQLObjectType({
                     "price": 45,
                     "rating": 4,
                     "imageName": "https://win22imgstorage.blob.core.windows.net/images/striped-top.png",
-                    "tag": ""
+                    "tag": "latest"
                 }, {
                     "articleNumber": "1920e1c5-c1c9-41b9-a485-1384972474eb",
                     "name": "Striped pink pants",
@@ -324,7 +324,7 @@ const Mutation = new GraphQLObjectType({
                     "price": 36,
                     "rating": 2,
                     "imageName": "https://win22imgstorage.blob.core.windows.net/images/striped-pants.png",
-                    "tag": "featured"
+                    "tag": "best-selling"
                 }, {
                     "articleNumber": "dbb4a5f2-be55-4931-b19e-54db48bc752a",
                     "name": "White seater",
@@ -333,7 +333,16 @@ const Mutation = new GraphQLObjectType({
                     "price": 25,
                     "rating": 2,
                     "imageName": "https://win22imgstorage.blob.core.windows.net/images/white-sweater.png",
-                    "tag": "featured"
+                    "tag": "best-selling"
+                }, {
+                    "articleNumber": "684a9d63-c7e2-446b-99df-eafdd31426b1",
+                    "name": "Winter boots",
+                    "description": description,
+                    "category": "Shoes",
+                    "price": 85,
+                    "rating": 2,
+                    "imageName": "https://win22imgstorage.blob.core.windows.net/images/winter-boots.png",
+                    "tag": "best-selling"
                 }, {
                     "articleNumber": "684a9d63-c7e2-446b-99df-eafdd31426b1",
                     "name": "Winter boots",
@@ -343,7 +352,26 @@ const Mutation = new GraphQLObjectType({
                     "rating": 2,
                     "imageName": "https://win22imgstorage.blob.core.windows.net/images/winter-boots.png",
                     "tag": "top-reacted"
-                }];
+                }, {
+                    "articleNumber": "684a9d63-c7e2-446b-99df-eafdd31426b1",
+                    "name": "Winter boots",
+                    "description": description,
+                    "category": "Shoes",
+                    "price": 85,
+                    "rating": 2,
+                    "imageName": "https://win22imgstorage.blob.core.windows.net/images/winter-boots.png",
+                    "tag": "top-reacted"
+                }, {
+                    "articleNumber": "684a9d63-c7e2-446b-99df-eafdd31426b1",
+                    "name": "Winter boots",
+                    "description": description,
+                    "category": "Shoes",
+                    "price": 85,
+                    "rating": 2,
+                    "imageName": "https://win22imgstorage.blob.core.windows.net/images/winter-boots.png",
+                    "tag": "top-reacted"
+                },
+            ];
 
                 Product.deleteMany(() => true);
                 Product.insertMany(products);

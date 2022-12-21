@@ -130,8 +130,7 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
     const result = await listProductsQuery({ variables: { tag: tag } });
     if (result.error)
       throw result.error;
-
-      console.log(result.data);
+    
     return result.data.products ?? [];
 
   }
@@ -254,9 +253,9 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
           featured: featured.slice(0, 8),
           sale1: flashSale.slice(0, 3),
           sale2: flashSale.slice(3, 8),
-          latest: latest.slice(0, 8),
-          bestSelling: bestSelling.slice(0, 8),
-          topReacted: topReacted.slice(0, 8),
+          latest: latest.slice(0, 3),
+          bestSelling: bestSelling.slice(0, 3),
+          topReacted: topReacted.slice(0, 3),
         });
   
       }

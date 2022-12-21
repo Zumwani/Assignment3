@@ -32,6 +32,10 @@ const NavBar: React.FC = () => {
     setIsUserMenuOpen(!isUserMenuOpen);
   }
   
+  const onClickOutsideOfUserPopup = () => {
+    setIsUserMenuOpen(false);
+  }
+
   return (
     <>
       <nav className="top">
@@ -62,7 +66,7 @@ const NavBar: React.FC = () => {
 
               <div>
                 <button id='userPopupButton' className='button-icon fa fa-user' type="button" onClick={onUserButtonClick}></button>
-                <UserPopup isOpen={isUserMenuOpen} button={() => document.querySelector("#userPopupButton")}/>
+                <UserPopup isOpen={isUserMenuOpen} button={() => document.querySelector("#userPopupButton")} onClickOutside={onClickOutsideOfUserPopup}/>
               </div>
 
           </div>

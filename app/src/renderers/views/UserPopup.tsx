@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import ActionButton from '../components/ActionButton';
 import Input from '../components/Contact/Input';
 import Tab from '../components/Tab';
@@ -8,16 +8,31 @@ import { useUser } from '../../utility/UserUtility';
 
 interface Params {
     isOpen: boolean;
-    didOpenThisFrame?: boolean;
     button: () => Element|null;
+    onClickOutside?: () => void;
 }
 
-const UserPopup: React.FC<Params> = ({ isOpen, didOpenThisFrame, button }) => {
+const UserPopup: React.FC<Params> = ({ isOpen, button, onClickOutside }) => {
 
     const [loginForm, setLoginForm] = useState<CreateUser>({ email: "", password: "" });
     const [registerForm, setRegisterForm] = useState<CreateUser>({ email: "", password: "" });
     const [loginError, setLoginError] = useState("");
     const [registerError, setRegisterError] = useState("");
+    const ref:any = useRef(null);
+
+    //#region Close on focus lost
+
+    const onClick = (e:any) => {
+        if (onClickOutside && ref.current && !ref.current.contains(e.target))
+            onClickOutside();
+    }
+
+    useEffect(() => {
+        document.addEventListener("click", onClick, true);
+        return () => document.removeEventListener("click", onClick, true);
+    }, []);
+
+    //#endregion
 
     const user = useUser();
     if (user == null)
@@ -101,7 +116,7 @@ const UserPopup: React.FC<Params> = ({ isOpen, didOpenThisFrame, button }) => {
     //#endregion
     
     return !isOpen ? null : (
-        <div id="user-popup">
+        <div id="user-popup" ref={ref}>
             <div className="p-4">
 
                 {

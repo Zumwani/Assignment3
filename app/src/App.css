@@ -274,6 +274,10 @@ table:not(.no-border) tr:hover Button {
   margin-bottom: 12px;
 }
 
+.error {
+  color: red;
+}
+
 .c-white {
   color: white;
 }
@@ -354,12 +358,32 @@ table:not(.no-border) tr:hover Button {
   background-position: center;
 }
 
-.h-403 {
-  height: 403px;
+.w-64 {
+  width: 64px;
 }
 
 .w-540 {
   width: 540px;
+}
+
+.h-40 {
+  height: 40px;
+}
+
+.w-110 {
+  width: 110px;
+}
+
+.h-403 {
+  height: 403px;
+}
+
+.h-560 {
+  height: 560px;
+}
+
+.w-min-0 {
+  min-width: 0 !important;
 }
 
 .max-width-425 {
@@ -372,24 +396,16 @@ table:not(.no-border) tr:hover Button {
   width: fit-content !important;
 }
 
-.h-40 {
-  height: 40px;
+.max-height-200 {
+  max-height: 200px;
 }
 
-.w-110 {
-  width: 110px;
+.left-0 {
+  left: 0;
 }
 
-.h-560 {
-  height: 560px;
-}
-
-.w-min-0 {
-  min-width: 0 !important;
-}
-
-.w-64 {
-  width: 64px;
+.mt-10 {
+  margin-top: 92.5px;
 }
 
 .p-50 {
@@ -444,29 +460,9 @@ table:not(.no-border) tr:hover Button {
   }
 }
 
-.error {
-  color: red;
-}
-
 .scrollable {
   overflow-y: auto;
   overflow-x: auto;
-}
-
-.left-0 {
-  left: 0;
-}
-
-.o-0 {
-  opacity: 0;
-}
-
-.mt-10 {
-  margin-top: 92.5px;
-}
-
-.max-height-200 {
-  max-height: 200px;
 }
 
 [data-badge] {
