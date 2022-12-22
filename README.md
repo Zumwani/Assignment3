@@ -1,3 +1,4 @@
 # Assignment3
 
-HTML + CSS + SASS + TS. ExpressJS + GraphQL.
+HTML + CSS + SASS + TS.\
+ExpressJS + GraphQL.
